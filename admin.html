@@ -2,57 +2,77 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Admin — Chá da Aurora</title>
+<title>Admin — Chá da Aurora 🌸</title>
+<link rel="stylesheet" href="style.css">
 <style>
-  body { font-family: sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; background: #fff5f8; }
-  h1 { color: #c2185b; }
-  h2 { color: #7b1fa2; }
-  input, select, button { padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; }
-  button { background: #c2185b; color: white; border: none; cursor: pointer; padding: 12px 24px; }
-  button:hover { background: #a01348; }
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
-  th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
-  th { background: #fce4ec; color: #c2185b; }
-  .ok { color: green; font-weight: bold; }
-  .no { color: gray; }
-  #msg { font-weight: bold; margin: 10px 0; }
-  a { color: #c2185b; }
+  body { padding: 30px 15px; }
+  .container { max-width: 950px; margin: 0 auto; }
 </style>
 </head>
 <body>
-  <h1>🌸 Painel Admin — Chá da Aurora</h1>
+<div class="container">
+  <div class="card">
+    <h1>🌸 Painel Admin — Chá da Aurora</h1>
 
-  <h2>Cadastrar convidado</h2>
-  <input id="nome" placeholder="Nome do convidado">
-  <input id="email" placeholder="E-mail do convidado">
-  <select id="fralda">
-    <option value="RN">Fralda RN</option>
-    <option value="P">Fralda P</option>
-    <option value="M" selected>Fralda M</option>
-    <option value="G">Fralda G</option>
-    <option value="GG">Fralda GG</option>
-  </select>
-  <select id="mimo">
-    <option value="sim">Com mimo</option>
-    <option value="nao">Sem mimo</option>
-  </select>
-  <button id="btnCadastrar">Cadastrar</button>
-  <p id="msg"></p>
+    <h2>✨ Cadastrar convidado</h2>
+    <input id="nome" placeholder="Nome do convidado">
+    <input id="email" placeholder="E-mail do convidado">
+    <select id="fralda">
+      <option value="RN">Fralda RN</option>
+      <option value="P">Fralda P</option>
+      <option value="M" selected>Fralda M</option>
+      <option value="G">Fralda G</option>
+      <option value="GG">Fralda GG</option>
+    </select>
+    <select id="mimo">
+      <option value="sim">Com mimo</option>
+      <option value="nao">Sem mimo</option>
+    </select>
+    <button id="btnCadastrar">Cadastrar</button>
+    <p id="msg"></p>
 
-  <h2>Lista de convidados</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>E-mail</th>
-        <th>Fralda</th>
-        <th>Mimo</th>
-        <th>Confirmou?</th>
-        <th>Link</th>
-      </tr>
-    </thead>
-    <tbody id="lista"></tbody>
-  </table>
+    <h2>📊 Relatório</h2>
+    <div class="stats">
+      <div class="stat total">
+        <span class="num" id="statTotal">0</span>
+        <span class="lbl">Total</span>
+      </div>
+      <div class="stat confirmado">
+        <span class="num" id="statConf">0</span>
+        <span class="lbl">Confirmados</span>
+      </div>
+      <div class="stat pendente">
+        <span class="num" id="statPend">0</span>
+        <span class="lbl">Pendentes</span>
+      </div>
+      <div class="stat fraldas">
+        <span class="num" id="statFraldas">0</span>
+        <span class="lbl">Fraldas</span>
+      </div>
+    </div>
+
+    <h2>🎀 Lista de convidados</h2>
+    <div style="margin: 10px 0;">
+      <label><input type="radio" name="filtro" value="todos" checked> Todos</label>
+      <label style="margin-left:15px;"><input type="radio" name="filtro" value="confirmados"> Confirmados</label>
+      <label style="margin-left:15px;"><input type="radio" name="filtro" value="pendentes"> Pendentes</label>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Fralda</th>
+          <th>Mimo</th>
+          <th>Confirmou?</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody id="lista"></tbody>
+    </table>
+  </div>
+</div>
 
 <script type="module">
 import { db } from './firebase.js';
@@ -73,10 +93,7 @@ document.getElementById('btnCadastrar').addEventListener('click', async () => {
 
   try {
     await setDoc(doc(db, 'convidados', email), {
-      nome: nome,
-      email: email,
-      fralda: fralda,
-      mimo: mimo,
+      nome, email, fralda, mimo,
       confirmado: false,
       criadoEm: new Date().toISOString()
     });
@@ -91,15 +108,49 @@ document.getElementById('btnCadastrar').addEventListener('click', async () => {
   }
 });
 
+let todosConvidados = [];
+
 onSnapshot(collection(db, 'convidados'), (snap) => {
+  todosConvidados = [];
+  snap.forEach(d => todosConvidados.push(d.data()));
+  atualizarStats();
+  renderLista();
+});
+
+document.querySelectorAll('input[name="filtro"]').forEach(r => {
+  r.addEventListener('change', renderLista);
+});
+
+function atualizarStats() {
+  const total = todosConvidados.length;
+  const confirmados = todosConvidados.filter(c => c.confirmado).length;
+  const pendentes = total - confirmados;
+
+  const contagem = {};
+  todosConvidados.forEach(c => { contagem[c.fralda] = (contagem[c.fralda] || 0) + 1; });
+  const fraldasTexto = Object.entries(contagem).map(([k, v]) => `${v} ${k}`).join(' · ') || '0';
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statConf').textContent = confirmados;
+  document.getElementById('statPend').textContent = pendentes;
+  document.getElementById('statFraldas').textContent = fraldasTexto;
+}
+
+function renderLista() {
+  const filtro = document.querySelector('input[name="filtro"]:checked').value;
   const lista = document.getElementById('lista');
   lista.innerHTML = '';
-  if (snap.empty) {
-    lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">Nenhum convidado cadastrado ainda</td></tr>';
+
+  let filtrados = todosConvidados;
+  if (filtro === 'confirmados') filtrados = todosConvidados.filter(c => c.confirmado);
+  if (filtro === 'pendentes') filtrados = todosConvidados.filter(c => !c.confirmado);
+
+  if (filtrados.length === 0) {
+    lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">Nenhum convidado aqui ainda 🌸</td></tr>';
     return;
   }
-  snap.forEach(d => {
-    const c = d.data();
+
+  filtrados.forEach(c => {
     const base = location.origin + location.pathname.replace('admin.html', 'index.html');
     const link = base + '?email=' + encodeURIComponent(c.email);
     lista.innerHTML += '<tr>' +
@@ -111,7 +162,7 @@ onSnapshot(collection(db, 'convidados'), (snap) => {
       '<td><a href="' + link + '" target="_blank">Abrir</a></td>' +
       '</tr>';
   });
-});
+}
 </script>
 </body>
 </html>
