@@ -2,112 +2,166 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Chá de Bebê da Aurora 🌸</title>
+<title>Admin — Chá da Aurora 🌸</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 15px;
-  }
-  .card {
-    max-width: 620px;
-    text-align: center;
-    padding: 50px 40px;
-  }
-  h1 {
-    font-size: 3em;
-    margin: 0 0 5px;
-  }
-  h2 {
-    font-weight: normal;
-    margin-top: 0;
-    font-size: 1.3em;
-  }
-  .info {
-    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
-    padding: 18px;
-    border-radius: 15px;
-    margin: 25px 0;
-    border: 2px dashed #f8bbd0;
-  }
-  .fralda {
-    font-size: 1.6em;
-    color: #c2185b;
-    font-weight: bold;
-    margin: 20px 0;
-  }
-  button {
-    padding: 15px 40px;
-    font-size: 18px;
-    border-radius: 30px;
-    margin-top: 20px;
-  }
-  .confirmado {
-    color: #2e7d32;
-    font-size: 1.3em;
-    font-weight: bold;
-    margin-top: 20px;
-  }
-  .estrelas { font-size: 1.5em; letter-spacing: 8px; }
+  body { padding: 30px 15px; }
+  .container { max-width: 950px; margin: 0 auto; }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="estrelas">✦ ✧ ✦ ✧ ✦</div>
-  <h1>Aurora 🌟</h1>
-  <h2>Chá de Bebê</h2>
-  <p><strong>Moises & Beatriz</strong> convidam você para celebrar<br>a chegada da nossa pequena Aurora.</p>
+<div class="container">
+  <div class="card">
+    <h1>🌸 Painel Admin — Chá da Aurora</h1>
 
-  <div class="info">
-    <p>📅 <strong>Novembro de 2026</strong></p>
-    <p>📍 Local: (a definir)</p>
+    <h2>✨ Cadastrar convidado</h2>
+    <input id="nome" placeholder="Nome do convidado">
+    <input id="email" placeholder="E-mail do convidado">
+    <select id="fralda">
+      <option value="RN">Fralda RN</option>
+      <option value="P">Fralda P</option>
+      <option value="M" selected>Fralda M</option>
+      <option value="G">Fralda G</option>
+      <option value="GG">Fralda GG</option>
+    </select>
+    <select id="mimo">
+      <option value="sim">Com mimo</option>
+      <option value="nao">Sem mimo</option>
+    </select>
+    <button id="btnCadastrar">Cadastrar</button>
+    <p id="msg"></p>
+
+    <h2>📊 Relatório</h2>
+    <div class="stats">
+      <div class="stat total">
+        <span class="num" id="statTotal">0</span>
+        <span class="lbl">Total</span>
+      </div>
+      <div class="stat confirmado">
+        <span class="num" id="statConf">0</span>
+        <span class="lbl">Confirmados</span>
+      </div>
+      <div class="stat pendente">
+        <span class="num" id="statPend">0</span>
+        <span class="lbl">Pendentes</span>
+      </div>
+      <div class="stat fraldas">
+        <span class="num" id="statFraldas">0</span>
+        <span class="lbl">Fraldas</span>
+      </div>
+    </div>
+
+    <h2>🎀 Lista de convidados</h2>
+    <div style="margin: 10px 0;">
+      <label><input type="radio" name="filtro" value="todos" checked> Todos</label>
+      <label style="margin-left:15px;"><input type="radio" name="filtro" value="confirmados"> Confirmados</label>
+      <label style="margin-left:15px;"><input type="radio" name="filtro" value="pendentes"> Pendentes</label>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Fralda</th>
+          <th>Mimo</th>
+          <th>Confirmou?</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody id="lista"></tbody>
+    </table>
   </div>
-
-  <div id="conteudo"></div>
-  <div class="estrelas" style="margin-top:25px;">✦ ✧ ✦ ✧ ✦</div>
 </div>
 
 <script type="module">
 import { db } from './firebase.js';
-import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const params = new URLSearchParams(location.search);
-const email = params.get('email');
-const conteudo = document.getElementById('conteudo');
+document.getElementById('btnCadastrar').addEventListener('click', async () => {
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const fralda = document.getElementById('fralda').value;
+  const mimo = document.getElementById('mimo').value;
+  const msg = document.getElementById('msg');
 
-if (!email) {
-  conteudo.innerHTML = '<p>💌 Por favor, use o link exclusivo enviado por Moises & Beatriz.</p>';
-} else {
-  const ref = doc(db, 'convidados', email);
-  const snap = await getDoc(ref);
-
-  if (!snap.exists()) {
-    conteudo.innerHTML = '<p>Convidado não encontrado. Fale com Moises ou Beatriz. 🌸</p>';
-  } else {
-    const c = snap.data();
-    conteudo.innerHTML = `
-      <p>Olá, <strong>${c.nome}</strong>! 💕</p>
-      <p>Você foi escolhido(a) para trazer:</p>
-      <p class="fralda">👶 Fralda tamanho ${c.fralda}</p>
-      ${c.mimo === 'sim' ? '<p>🎁 E um mimo especial!</p>' : ''}
-      <div id="rsvp"></div>
-    `;
-
-    const rsvp = document.getElementById('rsvp');
-    if (c.confirmado) {
-      rsvp.innerHTML = '<p class="confirmado">✅ Presença confirmada. Até lá! 🌸</p>';
-    } else {
-      const btn = document.createElement('button');
-      btn.textContent = '✨ Confirmar presença ✨';
-      btn.onclick = async () => {
-        await updateDoc(ref, { confirmado: true });
-        rsvp.innerHTML = '<p class="confirmado">✅ Presença confirmada. Até lá! 🌸</p>';
-      };
-      rsvp.appendChild(btn);
-    }
+  if (!nome || !email) {
+    msg.textContent = '⚠️ Preencha nome e e-mail';
+    msg.style.color = 'orange';
+    return;
   }
+
+  try {
+    await setDoc(doc(db, 'convidados', email), {
+      nome, email, fralda, mimo,
+      confirmado: false,
+      criadoEm: new Date().toISOString()
+    });
+    msg.textContent = '✅ Convidado cadastrado!';
+    msg.style.color = 'green';
+    document.getElementById('nome').value = '';
+    document.getElementById('email').value = '';
+  } catch (e) {
+    console.error(e);
+    msg.textContent = '❌ Erro: ' + e.message;
+    msg.style.color = 'red';
+  }
+});
+
+let todosConvidados = [];
+
+onSnapshot(collection(db, 'convidados'), (snap) => {
+  todosConvidados = [];
+  snap.forEach(d => todosConvidados.push(d.data()));
+  atualizarStats();
+  renderLista();
+});
+
+document.querySelectorAll('input[name="filtro"]').forEach(r => {
+  r.addEventListener('change', renderLista);
+});
+
+function atualizarStats() {
+  const total = todosConvidados.length;
+  const confirmados = todosConvidados.filter(c => c.confirmado).length;
+  const pendentes = total - confirmados;
+
+  const contagem = {};
+  todosConvidados.forEach(c => { contagem[c.fralda] = (contagem[c.fralda] || 0) + 1; });
+  const fraldasTexto = Object.entries(contagem).map(([k, v]) => `${v} ${k}`).join(' · ') || '0';
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statConf').textContent = confirmados;
+  document.getElementById('statPend').textContent = pendentes;
+  document.getElementById('statFraldas').textContent = fraldasTexto;
+}
+
+function renderLista() {
+  const filtro = document.querySelector('input[name="filtro"]:checked').value;
+  const lista = document.getElementById('lista');
+  lista.innerHTML = '';
+
+  let filtrados = todosConvidados;
+  if (filtro === 'confirmados') filtrados = todosConvidados.filter(c => c.confirmado);
+  if (filtro === 'pendentes') filtrados = todosConvidados.filter(c => !c.confirmado);
+
+  if (filtrados.length === 0) {
+    lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">Nenhum convidado aqui ainda 🌸</td></tr>';
+    return;
+  }
+
+  filtrados.forEach(c => {
+    const base = location.origin + location.pathname.replace('admin.html', 'index.html');
+    const link = base + '?email=' + encodeURIComponent(c.email);
+    lista.innerHTML += '<tr>' +
+      '<td>' + c.nome + '</td>' +
+      '<td>' + c.email + '</td>' +
+      '<td>' + c.fralda + '</td>' +
+      '<td>' + c.mimo + '</td>' +
+      '<td class="' + (c.confirmado ? 'ok' : 'no') + '">' + (c.confirmado ? 'Sim ✅' : 'Ainda não') + '</td>' +
+      '<td><a href="' + link + '" target="_blank">Abrir</a></td>' +
+      '</tr>';
+  });
 }
 </script>
 </body>
