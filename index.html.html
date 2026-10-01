@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Chá de Bebê da Aurora 🌸</title>
+<style>
+  body { font-family: 'Georgia', serif; background: linear-gradient(135deg, #fce4ec, #f3e5f5); min-height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; padding: 20px; }
+  .card { background: white; max-width: 600px; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(194,24,91,0.15); text-align: center; }
+  h1 { color: #c2185b; font-size: 2.5em; margin-bottom: 0; }
+  h2 { color: #7b1fa2; font-weight: normal; }
+  .info { background: #fce4ec; padding: 15px; border-radius: 10px; margin: 20px 0; }
+  .fralda { font-size: 1.5em; color: #c2185b; font-weight: bold; }
+  button { background: #c2185b; color: white; border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; cursor: pointer; margin-top: 20px; }
+  button:hover { background: #a01348; }
+  .confirmado { color: green; font-size: 1.3em; font-weight: bold; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <h1>Aurora 🌟</h1>
+  <h2>Chá de Bebê</h2>
+  <p><strong>Moises & Beatriz</strong> convidam você para celebrar a chegada da nossa pequena Aurora.</p>
+  <div class="info">
+    <p>📅 <strong>Novembro de 2026</strong></p>
+    <p>📍 Local: (a definir)</p>
+  </div>
+  <div id="conteudo"></div>
+</div>
+
+<script type="module">
+import { db } from './firebase.js';
+import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const params = new URLSearchParams(location.search);
+const email = params.get('email');
+const conteudo = document.getElementById('conteudo');
+
+if (!email) {
+  conteudo.innerHTML = '<p>Por favor, use o link exclusivo enviado por Moises & Beatriz.</p>';
+} else {
+  const ref = doc(db, 'convidados', email);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    conteudo.innerHTML = '<p>Convidado não encontrado. Fale com Moises ou Beatriz.</p>';
+  } else {
+    const c = snap.data();
+    conteudo.innerHTML = `
+      <p>Olá, <strong>${c.nome}</strong>!</p>
+      <p>Você foi escolhido(a) para trazer:</p>
+      <p class="fralda">👶 Fralda tamanho ${c.fralda}</p>
+      ${c.mimo === 'sim' ? '<p>🎁 E um mimo especial!</p>' : ''}
+      <div id="rsvp"></div>
+    `;
+
+    const rsvp = document.getElementById('rsvp');
+    if (c.confirmado) {
+      rsvp.innerHTML = '<p class="confirmado">✅ Presença confirmada. Até lá!</p>';
+    } else {
+      const btn = document.createElement('button');
+      btn.textContent = 'Confirmar presença';
+      btn.onclick = async () => {
+        await updateDoc(ref, { confirmado: true });
+        rsvp.innerHTML = '<p class="confirmado">✅ Presença confirmada. Até lá!</p>';
+      };
+      rsvp.appendChild(btn);
+    }
+  }
+}
+</script>
+</body>
+</html>
