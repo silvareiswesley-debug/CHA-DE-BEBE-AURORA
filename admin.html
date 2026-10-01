@@ -73,7 +73,10 @@ document.getElementById('btnCadastrar').addEventListener('click', async () => {
 
   try {
     await setDoc(doc(db, 'convidados', email), {
-      nome, email, fralda, mimo,
+      nome: nome,
+      email: email,
+      fralda: fralda,
+      mimo: mimo,
       confirmado: false,
       criadoEm: new Date().toISOString()
     });
