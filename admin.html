@@ -3,10 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <title>Admin — Chá da Aurora 🌸</title>
-<link rel="stylesheet" href="style.css">
 <style>
-  body { padding: 30px 15px; }
+  body {
+    font-family: 'Comic Sans MS', 'Quicksand', sans-serif;
+    margin: 0;
+    padding: 30px 15px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #ffe4ec 0%, #f8d7f0 40%, #e6d5f5 70%, #d5e5f7 100%);
+    background-attachment: fixed;
+  }
   .container { max-width: 950px; margin: 0 auto; }
+  .card {
+    background: rgba(255,255,255,0.94);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 15px 50px rgba(194,24,91,0.18);
+    border: 3px dashed #f8bbd0;
+  }
+  h1 { color: #c2185b; text-shadow: 2px 2px 0 #ffe4ec; }
+  h2 { color: #7b1fa2; margin-top: 30px; }
+  input, select, button {
+    padding: 10px; margin: 5px 0; border-radius: 12px;
+    border: 2px solid #f8bbd0; font-size: 16px; font-family: inherit;
+  }
+  button {
+    background: linear-gradient(135deg, #f06292, #c2185b);
+    color: white; border: none; cursor: pointer;
+    padding: 12px 24px; font-weight: bold;
+    box-shadow: 0 4px 12px rgba(194,24,91,0.3);
+  }
+  button:hover { transform: translateY(-2px); }
+  table {
+    width: 100%; border-collapse: collapse; margin-top: 20px;
+    background: white; border-radius: 15px; overflow: hidden;
+    box-shadow: 0 4px 15px rgba(194,24,91,0.1);
+  }
+  th, td { padding: 12px; border-bottom: 1px solid #fce4ec; text-align: left; font-size: 14px; }
+  th { background: #fce4ec; color: #c2185b; font-size: 15px; }
+  .ok { color: #2e7d32; font-weight: bold; }
+  .no { color: #999; }
+  #msg { font-weight: bold; margin: 10px 0; }
+  a { color: #c2185b; }
+  .stats { display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+  .stat {
+    flex: 1; min-width: 140px; padding: 20px; border-radius: 18px;
+    text-align: center; color: white; font-weight: bold;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  }
+  .stat .num { font-size: 32px; display: block; }
+  .stat .lbl { font-size: 13px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
+  .stat.total      { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
+  .stat.confirmado { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
+  .stat.pendente   { background: linear-gradient(135deg, #ffb74d, #ef6c00); }
+  .stat.fraldas    { background: linear-gradient(135deg, #4fc3f7, #0277bd); }
 </style>
 </head>
 <body>
@@ -33,22 +82,10 @@
 
     <h2>📊 Relatório</h2>
     <div class="stats">
-      <div class="stat total">
-        <span class="num" id="statTotal">0</span>
-        <span class="lbl">Total</span>
-      </div>
-      <div class="stat confirmado">
-        <span class="num" id="statConf">0</span>
-        <span class="lbl">Confirmados</span>
-      </div>
-      <div class="stat pendente">
-        <span class="num" id="statPend">0</span>
-        <span class="lbl">Pendentes</span>
-      </div>
-      <div class="stat fraldas">
-        <span class="num" id="statFraldas">0</span>
-        <span class="lbl">Fraldas</span>
-      </div>
+      <div class="stat total"><span class="num" id="statTotal">0</span><span class="lbl">Total</span></div>
+      <div class="stat confirmado"><span class="num" id="statConf">0</span><span class="lbl">Confirmados</span></div>
+      <div class="stat pendente"><span class="num" id="statPend">0</span><span class="lbl">Pendentes</span></div>
+      <div class="stat fraldas"><span class="num" id="statFraldas">0</span><span class="lbl">Fraldas</span></div>
     </div>
 
     <h2>🎀 Lista de convidados</h2>
@@ -61,12 +98,8 @@
     <table>
       <thead>
         <tr>
-          <th>Nome</th>
-          <th>E-mail</th>
-          <th>Fralda</th>
-          <th>Mimo</th>
-          <th>Confirmou?</th>
-          <th>Link</th>
+          <th>Nome</th><th>E-mail</th><th>Fralda</th>
+          <th>Mimo</th><th>Confirmou?</th><th>Link</th>
         </tr>
       </thead>
       <tbody id="lista"></tbody>
@@ -90,7 +123,6 @@ document.getElementById('btnCadastrar').addEventListener('click', async () => {
     msg.style.color = 'orange';
     return;
   }
-
   try {
     await setDoc(doc(db, 'convidados', email), {
       nome, email, fralda, mimo,
@@ -109,7 +141,6 @@ document.getElementById('btnCadastrar').addEventListener('click', async () => {
 });
 
 let todosConvidados = [];
-
 onSnapshot(collection(db, 'convidados'), (snap) => {
   todosConvidados = [];
   snap.forEach(d => todosConvidados.push(d.data()));
@@ -125,11 +156,9 @@ function atualizarStats() {
   const total = todosConvidados.length;
   const confirmados = todosConvidados.filter(c => c.confirmado).length;
   const pendentes = total - confirmados;
-
   const contagem = {};
   todosConvidados.forEach(c => { contagem[c.fralda] = (contagem[c.fralda] || 0) + 1; });
-  const fraldasTexto = Object.entries(contagem).map(([k, v]) => `${v} ${k}`).join(' · ') || '0';
-
+  const fraldasTexto = Object.entries(contagem).map(([k,v]) => v+' '+k).join(' · ') || '0';
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statConf').textContent = confirmados;
   document.getElementById('statPend').textContent = pendentes;
@@ -140,7 +169,6 @@ function renderLista() {
   const filtro = document.querySelector('input[name="filtro"]:checked').value;
   const lista = document.getElementById('lista');
   lista.innerHTML = '';
-
   let filtrados = todosConvidados;
   if (filtro === 'confirmados') filtrados = todosConvidados.filter(c => c.confirmado);
   if (filtro === 'pendentes') filtrados = todosConvidados.filter(c => !c.confirmado);
@@ -149,17 +177,16 @@ function renderLista() {
     lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">Nenhum convidado aqui ainda 🌸</td></tr>';
     return;
   }
-
   filtrados.forEach(c => {
     const base = location.origin + location.pathname.replace('admin.html', 'index.html');
     const link = base + '?email=' + encodeURIComponent(c.email);
     lista.innerHTML += '<tr>' +
-      '<td>' + c.nome + '</td>' +
-      '<td>' + c.email + '</td>' +
-      '<td>' + c.fralda + '</td>' +
-      '<td>' + c.mimo + '</td>' +
-      '<td class="' + (c.confirmado ? 'ok' : 'no') + '">' + (c.confirmado ? 'Sim ✅' : 'Ainda não') + '</td>' +
-      '<td><a href="' + link + '" target="_blank">Abrir</a></td>' +
+      '<td>'+c.nome+'</td>' +
+      '<td>'+c.email+'</td>' +
+      '<td>'+c.fralda+'</td>' +
+      '<td>'+c.mimo+'</td>' +
+      '<td class="'+(c.confirmado?'ok':'no')+'">'+(c.confirmado?'Sim ✅':'Ainda não')+'</td>' +
+      '<td><a href="'+link+'" target="_blank">Abrir</a></td>' +
       '</tr>';
   });
 }
