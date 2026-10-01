@@ -4,20 +4,24 @@
 <meta charset="UTF-8">
 <title>Admin — Chá da Aurora</title>
 <style>
-  body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #fff5f8; }
+  body { font-family: sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; background: #fff5f8; }
   h1 { color: #c2185b; }
+  h2 { color: #7b1fa2; }
   input, select, button { padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; }
-  button { background: #c2185b; color: white; border: none; cursor: pointer; }
+  button { background: #c2185b; color: white; border: none; cursor: pointer; padding: 12px 24px; }
   button:hover { background: #a01348; }
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-  th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
-  th { background: #fce4ec; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
+  th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
+  th { background: #fce4ec; color: #c2185b; }
   .ok { color: green; font-weight: bold; }
   .no { color: gray; }
+  #msg { font-weight: bold; margin: 10px 0; }
+  a { color: #c2185b; }
 </style>
 </head>
 <body>
   <h1>🌸 Painel Admin — Chá da Aurora</h1>
+
   <h2>Cadastrar convidado</h2>
   <input id="nome" placeholder="Nome do convidado">
   <input id="email" placeholder="E-mail do convidado">
@@ -38,7 +42,14 @@
   <h2>Lista de convidados</h2>
   <table>
     <thead>
-      <tr><th>Nome</th><th>E-mail</th><th>Fralda</th><th>Mimo</th><th>Confirmou?</th><th>Link</th></tr>
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Fralda</th>
+        <th>Mimo</th>
+        <th>Confirmou?</th>
+        <th>Link</th>
+      </tr>
     </thead>
     <tbody id="lista"></tbody>
   </table>
@@ -47,13 +58,18 @@
 import { db } from './firebase.js';
 import { collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-async function cadastrar() {
+document.getElementById('btnCadastrar').addEventListener('click', async () => {
   const nome = document.getElementById('nome').value.trim();
   const email = document.getElementById('email').value.trim().toLowerCase();
   const fralda = document.getElementById('fralda').value;
   const mimo = document.getElementById('mimo').value;
+  const msg = document.getElementById('msg');
 
-  if (!nome || !email) { alert('Preencha nome e e-mail'); return; }
+  if (!nome || !email) {
+    msg.textContent = '⚠️ Preencha nome e e-mail';
+    msg.style.color = 'orange';
+    return;
+  }
 
   try {
     await setDoc(doc(db, 'convidados', email), {
@@ -61,31 +77,36 @@ async function cadastrar() {
       confirmado: false,
       criadoEm: new Date().toISOString()
     });
-    document.getElementById('msg').textContent = '✅ Convidado cadastrado!';
+    msg.textContent = '✅ Convidado cadastrado!';
+    msg.style.color = 'green';
     document.getElementById('nome').value = '';
     document.getElementById('email').value = '';
   } catch (e) {
     console.error(e);
-    document.getElementById('msg').textContent = '❌ Erro: ' + e.message;
+    msg.textContent = '❌ Erro: ' + e.message;
+    msg.style.color = 'red';
   }
-}
-
-document.getElementById('btnCadastrar').addEventListener('click', cadastrar);
+});
 
 onSnapshot(collection(db, 'convidados'), (snap) => {
   const lista = document.getElementById('lista');
   lista.innerHTML = '';
+  if (snap.empty) {
+    lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">Nenhum convidado cadastrado ainda</td></tr>';
+    return;
+  }
   snap.forEach(d => {
     const c = d.data();
-    const link = `${location.origin}${location.pathname.replace('admin.html','index.html')}?email=${encodeURIComponent(c.email)}`;
-    lista.innerHTML += `<tr>
-      <td>${c.nome}</td>
-      <td>${c.email}</td>
-      <td>${c.fralda}</td>
-      <td>${c.mimo}</td>
-      <td class="${c.confirmado ? 'ok' : 'no'}">${c.confirmado ? 'Sim ✅' : 'Ainda não'}</td>
-      <td><a href="${link}" target="_blank">Abrir</a></td>
-    </tr>`;
+    const base = location.origin + location.pathname.replace('admin.html', 'index.html');
+    const link = base + '?email=' + encodeURIComponent(c.email);
+    lista.innerHTML += '<tr>' +
+      '<td>' + c.nome + '</td>' +
+      '<td>' + c.email + '</td>' +
+      '<td>' + c.fralda + '</td>' +
+      '<td>' + c.mimo + '</td>' +
+      '<td class="' + (c.confirmado ? 'ok' : 'no') + '">' + (c.confirmado ? 'Sim ✅' : 'Ainda não') + '</td>' +
+      '<td><a href="' + link + '" target="_blank">Abrir</a></td>' +
+      '</tr>';
   });
 });
 </script>
