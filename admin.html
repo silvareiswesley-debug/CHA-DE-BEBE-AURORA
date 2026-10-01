@@ -32,7 +32,7 @@
     <option value="sim">Com mimo</option>
     <option value="nao">Sem mimo</option>
   </select>
-  <button onclick="cadastrar()">Cadastrar</button>
+  <button id="btnCadastrar">Cadastrar</button>
   <p id="msg"></p>
 
   <h2>Lista de convidados</h2>
@@ -55,23 +55,29 @@ async function cadastrar() {
 
   if (!nome || !email) { alert('Preencha nome e e-mail'); return; }
 
-  await setDoc(doc(db, 'convidados', email), {
-    nome, email, fralda, mimo,
-    confirmado: false,
-    criadoEm: new Date().toISOString()
-  });
-
-  document.getElementById('msg').textContent = '✅ Convidado cadastrado!';
-  document.getElementById('nome').value = '';
-  document.getElementById('email').value = '';
+  try {
+    await setDoc(doc(db, 'convidados', email), {
+      nome, email, fralda, mimo,
+      confirmado: false,
+      criadoEm: new Date().toISOString()
+    });
+    document.getElementById('msg').textContent = '✅ Convidado cadastrado!';
+    document.getElementById('nome').value = '';
+    document.getElementById('email').value = '';
+  } catch (e) {
+    console.error(e);
+    document.getElementById('msg').textContent = '❌ Erro: ' + e.message;
+  }
 }
+
+document.getElementById('btnCadastrar').addEventListener('click', cadastrar);
 
 onSnapshot(collection(db, 'convidados'), (snap) => {
   const lista = document.getElementById('lista');
   lista.innerHTML = '';
   snap.forEach(d => {
     const c = d.data();
-    const link = `${location.origin}/index.html?email=${encodeURIComponent(c.email)}`;
+    const link = `${location.origin}${location.pathname.replace('admin.html','index.html')}?email=${encodeURIComponent(c.email)}`;
     lista.innerHTML += `<tr>
       <td>${c.nome}</td>
       <td>${c.email}</td>
