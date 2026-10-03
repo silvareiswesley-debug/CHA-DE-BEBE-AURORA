@@ -38,8 +38,6 @@
   }
   th, td { padding: 10px; border-bottom: 1px solid #fce4ec; text-align: left; font-size: 13px; vertical-align: top; }
   th { background: #fce4ec; color: #c2185b; font-size: 13px; }
-  .ok { color: #2e7d32; font-weight: bold; }
-  .no { color: #999; }
   .stats { display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
   .stat {
     flex: 1; min-width: 130px; padding: 20px; border-radius: 18px;
@@ -84,7 +82,7 @@
 
     <h2>📊 Relatório geral</h2>
     <div class="stats">
-      <div class="stat total"><span class="num" id="statTotal">0</span><span class="lbl">Confirmaram</span></div>
+      <div class="stat total"><span class="num" id="statTotal">0</span><span class="lbl">Confirmações</span></div>
       <div class="stat pessoas"><span class="num" id="statPessoas">0</span><span class="lbl">Pessoas total</span></div>
       <div class="stat m"><span class="num" id="statM">0</span><span class="lbl">Fralda M</span></div>
       <div class="stat g"><span class="num" id="statG">0</span><span class="lbl">Fralda G</span></div>
@@ -100,7 +98,7 @@
       <thead>
         <tr>
           <th>Nome</th><th>CPF</th><th>E-mail</th><th>Fralda</th>
-          <th>Mimo</th><th>Pessoas</th><th>Ações</th>
+          <th>Pessoas</th><th>Ações</th>
         </tr>
       </thead>
       <tbody id="lista"></tbody>
@@ -120,8 +118,6 @@
     <input id="editEmail">
     <label style="font-size:0.85em;color:#7b1fa2;">Fralda</label>
     <select id="editFralda"><option value="M">M</option><option value="G">G</option></select>
-    <label style="font-size:0.85em;color:#7b1fa2;">Mimo</label>
-    <select id="editMimo"><option value="sim">Sim</option><option value="nao">Não</option></select>
     <label style="font-size:0.85em;color:#7b1fa2;margin-top:10px;display:block;">Acompanhantes</label>
     <div id="editAcomp"></div>
     <button type="button" class="btn btn-mini btn-azul" onclick="addAcompEdit()">➕ Adicionar</button>
@@ -136,7 +132,6 @@
 import { db } from './firebase.js';
 import { collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Link compartilhável
 const linkCompartilhavel = location.origin + location.pathname.replace('admin.html', 'index.html');
 document.getElementById('linkCompartilhavel').value = linkCompartilhavel;
 
@@ -177,7 +172,7 @@ function renderLista() {
   }
 
   if (filtrados.length === 0) {
-    lista.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">Nenhum convidado aqui ainda 🌸</td></tr>';
+    lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">Nenhum convidado aqui ainda 🌸</td></tr>';
     return;
   }
 
@@ -190,7 +185,6 @@ function renderLista() {
       '<td>'+(c.cpf||'-')+'</td>' +
       '<td>'+(c.email||'-')+'</td>' +
       '<td><strong>'+c.fralda+'</strong></td>' +
-      '<td>'+(c.mimo === 'sim' ? '🎁 Sim' : 'Não')+'</td>' +
       '<td><strong>'+(c.totalPessoas||1)+'</strong></td>' +
       '<td>' +
         '<button class="btn btn-mini btn-verde" onclick="editar(\''+c.id+'\')">✏️</button> ' +
@@ -200,7 +194,6 @@ function renderLista() {
   });
 }
 
-/* EDITAR */
 window.editar = function(id) {
   const c = convidados.find(x => x.id === id);
   if (!c) return;
@@ -209,7 +202,6 @@ window.editar = function(id) {
   document.getElementById('editCpf').value = c.cpf || '';
   document.getElementById('editEmail').value = c.email || '';
   document.getElementById('editFralda').value = c.fralda || 'M';
-  document.getElementById('editMimo').value = c.mimo || 'sim';
 
   const container = document.getElementById('editAcomp');
   container.innerHTML = '';
@@ -248,7 +240,6 @@ window.salvarEdicao = async function() {
   const cpf = document.getElementById('editCpf').value.trim();
   const email = document.getElementById('editEmail').value.trim().toLowerCase();
   const fralda = document.getElementById('editFralda').value;
-  const mimo = document.getElementById('editMimo').value;
   const original = convidados.find(x => x.id === id);
 
   const acompanhantes = [];
@@ -261,7 +252,7 @@ window.salvarEdicao = async function() {
 
   await setDoc(doc(db, 'convidados', id), {
     ...original,
-    nome, cpf, cpfLimpo: cpf.replace(/\D/g,''), email, fralda, mimo,
+    nome, cpf, cpfLimpo: cpf.replace(/\D/g,''), email, fralda,
     acompanhantes,
     totalPessoas: 1 + acompanhantes.length
   });
@@ -273,7 +264,6 @@ window.excluir = async function(id, nome) {
   await deleteDoc(doc(db, 'convidados', id));
 };
 
-/* IMPRIMIR */
 window.imprimirRelatorio = function() {
   const totalPessoas = convidados.reduce((s,c) => s + (c.totalPessoas||1), 0);
 
@@ -306,11 +296,11 @@ window.imprimirRelatorio = function() {
 
     <h2>Lista de confirmados</h2>
     <table>
-      <tr><th>#</th><th>Nome</th><th>CPF</th><th>Fralda</th><th>Mimo</th><th>Pessoas</th></tr>
+      <tr><th>#</th><th>Nome</th><th>CPF</th><th>Fralda</th><th>Pessoas</th></tr>
       ${convidados.length ? convidados.map((c,i) => {
         const acomps = (c.acompanhantes||[]).map(a => `<div class="acomp">↳ ${a.nome} — ${a.cpf}</div>`).join('');
-        return `<tr><td>${i+1}</td><td>${c.nome}${acomps}</td><td>${c.cpf||'-'}</td><td>${c.fralda}</td><td>${c.mimo}</td><td>${c.totalPessoas||1}</td></tr>`;
-      }).join('') : '<tr><td colspan="6" style="text-align:center;">Nenhum confirmado ainda</td></tr>'}
+        return `<tr><td>${i+1}</td><td>${c.nome}${acomps}</td><td>${c.cpf||'-'}</td><td>${c.fralda}</td><td>${c.totalPessoas||1}</td></tr>`;
+      }).join('') : '<tr><td colspan="5" style="text-align:center;">Nenhum confirmado ainda</td></tr>'}
     </table>
 
     <div class="rodape">Relatório gerado pelo painel admin — Chá da Aurora 🌟</div>
