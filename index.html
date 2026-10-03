@@ -3,28 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <title>Chá de Bebê da Aurora 🌸</title>
-<link rel="stylesheet" href="style.css">
 <style>
   body {
+    font-family: 'Comic Sans MS', 'Quicksand', sans-serif;
+    margin: 0;
+    padding: 30px 15px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #ffe4ec 0%, #f8d7f0 40%, #e6d5f5 70%, #d5e5f7 100%);
+    background-attachment: fixed;
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 30px 15px;
+    align-items: flex-start;
   }
   .card {
     max-width: 620px;
-    text-align: center;
+    width: 100%;
+    background: rgba(255,255,255,0.94);
+    border-radius: 25px;
     padding: 50px 40px;
+    box-shadow: 0 15px 50px rgba(194,24,91,0.18);
+    border: 3px dashed #f8bbd0;
+    text-align: center;
   }
-  h1 {
-    font-size: 3em;
-    margin: 0 0 5px;
-  }
-  h2 {
-    font-weight: normal;
-    margin-top: 0;
-    font-size: 1.3em;
-  }
+  h1 { font-size: 3em; margin: 0 0 5px; color: #c2185b; text-shadow: 2px 2px 0 #ffe4ec; }
+  h2 { font-weight: normal; margin-top: 0; font-size: 1.3em; color: #7b1fa2; }
   .info {
     background: linear-gradient(135deg, #fce4ec, #f3e5f5);
     padding: 18px;
@@ -32,25 +34,38 @@
     margin: 25px 0;
     border: 2px dashed #f8bbd0;
   }
-  .fralda {
-    font-size: 1.6em;
-    color: #c2185b;
-    font-weight: bold;
-    margin: 20px 0;
-  }
+  .fralda { font-size: 1.6em; color: #c2185b; font-weight: bold; margin: 20px 0; }
   button {
     padding: 15px 40px;
     font-size: 18px;
     border-radius: 30px;
-    margin-top: 20px;
-  }
-  .confirmado {
-    color: #2e7d32;
-    font-size: 1.3em;
+    border: none;
+    background: linear-gradient(135deg, #f06292, #c2185b);
+    color: white;
     font-weight: bold;
+    cursor: pointer;
     margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(194,24,91,0.3);
   }
-  .estrelas { font-size: 1.5em; letter-spacing: 8px; }
+  button:hover { transform: translateY(-2px); }
+  .confirmado { color: #2e7d32; font-size: 1.3em; font-weight: bold; margin-top: 20px; }
+  .estrelas { font-size: 1.5em; letter-spacing: 8px; color: #f06292; }
+
+  .regras { margin: 30px 0; text-align: left; }
+  .regras h3 { text-align: center; color: #c2185b; margin-bottom: 15px; font-size: 1.2em; }
+  .regra {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: #fff5f8; border-left: 5px solid #f8bbd0;
+    border-radius: 12px; padding: 12px 15px; margin-bottom: 10px;
+    font-size: 0.95em; line-height: 1.4;
+  }
+  .regra .icone { font-size: 1.6em; flex-shrink: 0; }
+  .regra strong { color: #c2185b; display: block; margin-bottom: 3px; }
+  .regra em { color: #666; font-style: italic; font-size: 0.92em; }
+  .regra.destaque { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-left-color: #ef6c00; }
+  .regra.destaque strong { color: #e65100; }
+  .regra.alerta { background: #ffebee; border-left-color: #e53935; }
+  .regra.alerta strong { color: #c62828; }
 </style>
 </head>
 <body>
@@ -63,6 +78,53 @@
   <div class="info">
     <p>📅 <strong>Novembro de 2026</strong></p>
     <p>📍 Local: (a definir)</p>
+  </div>
+
+  <div class="regras">
+    <h3>📋 Regras do Chá</h3>
+
+    <div class="regra">
+      <span class="icone">👗</span>
+      <div>
+        <strong>Vestimenta adequada</strong>
+        Pedimos a gentileza de virem com trajes apropriados para uma celebração em família.
+        <em>Não será permitido shorts curtos, saias curtas, roupas muito decotadas ou peças de praia.</em>
+      </div>
+    </div>
+
+    <div class="regra">
+      <span class="icone">👶</span>
+      <div>
+        <strong>Fraldas — somente tamanhos M ou G</strong>
+        Para evitar desperdício, aceitaremos <strong>apenas fraldas tamanho M ou G</strong>.
+      </div>
+    </div>
+
+    <div class="regra destaque">
+      <span class="icone">💬</span>
+      <div>
+        <strong>Recado do papai Moises:</strong>
+        <em>"Só entra se trazer fraldas destes tamanhos solicitados!"</em>
+      </div>
+    </div>
+
+    <div class="regra">
+      <span class="icone">🥤</span>
+      <div>
+        <strong>Bebidas</strong>
+        Cada convidado deve <strong>trazer sua própria bebida para consumo</strong>.
+        <em>Não vamos admitir discussões ou brigas por causa de bebida.</em>
+      </div>
+    </div>
+
+    <div class="regra alerta">
+      <span class="icone">🚫</span>
+      <div>
+        <strong>Proibido</strong>
+        Cigarros eletrônicos (vape), narguilé e quaisquer outros cigarros ilícitos.
+        <em>Ambiente 100% livre desses itens — é uma festa para a Aurora.</em>
+      </div>
+    </div>
   </div>
 
   <div id="conteudo"></div>
