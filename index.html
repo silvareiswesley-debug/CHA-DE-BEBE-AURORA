@@ -66,6 +66,11 @@
   .regra.destaque strong { color: #e65100; }
   .regra.alerta { background: #ffebee; border-left-color: #e53935; }
   .regra.alerta strong { color: #c62828; }
+
+  .mapa { margin-top: 15px; border-radius: 12px; overflow: hidden; border: 3px solid #f8bbd0; }
+  .mapa iframe { display: block; width: 100%; height: 220px; border: 0; }
+
+  .endereco { font-size: 0.95em; color: #555; margin-top: 10px; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -76,8 +81,20 @@
   <p><strong>Moises & Beatriz</strong> convidam você para celebrar<br>a chegada da nossa pequena Aurora.</p>
 
   <div class="info">
-    <p>📅 <strong>Novembro de 2026</strong></p>
-    <p>📍 Local: (a definir)</p>
+    <p>📅 <strong>29 de Novembro de 2026</strong></p>
+    <p>🕐 Horário: (a confirmar)</p>
+    <div class="endereco">
+      📍 <strong>Estrada do Pium, 4145</strong><br>
+      Mogi das Cruzes — SP<br>
+      CEP 08774-320
+    </div>
+    <div class="mapa">
+      <iframe
+        src="https://www.google.com/maps?q=Estrada+do+Pium+4145+Mogi+das+Cruzes+SP+08774-320&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
   </div>
 
   <div class="regras">
