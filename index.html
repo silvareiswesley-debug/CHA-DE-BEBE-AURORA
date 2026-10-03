@@ -48,13 +48,9 @@
   .mapa iframe { display: block; width: 100%; height: 220px; border: 0; }
   .endereco { font-size: 0.95em; color: #555; margin-top: 10px; line-height: 1.5; }
 
-  /* Formulário */
   .form {
-    background: #fff5f8;
-    border-radius: 20px;
-    padding: 25px;
-    margin-top: 30px;
-    text-align: left;
+    background: #fff5f8; border-radius: 20px;
+    padding: 25px; margin-top: 30px; text-align: left;
     border: 2px dashed #f8bbd0;
   }
   .form h3 { text-align: center; color: #c2185b; margin-top: 0; }
@@ -165,6 +161,14 @@
       </div>
     </div>
 
+    <div class="regra">
+      <span class="icone">🎁</span>
+      <div>
+        <strong>Mimo obrigatório</strong>
+        Cada convidado deve trazer <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.
+      </div>
+    </div>
+
     <div class="regra alerta">
       <span class="icone">🚫</span>
       <div>
@@ -185,8 +189,6 @@ import { db } from './firebase.js';
 import { collection, doc, setDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const area = document.getElementById('area-formulario');
-
-// Verifica se já veio com ?email= na URL (link pessoal antigo)
 const params = new URLSearchParams(location.search);
 const emailPre = params.get('email') || '';
 
@@ -195,7 +197,7 @@ area.innerHTML = `
     <h3>✨ Confirme sua presença ✨</h3>
 
     <label>Nome completo *</label>
-    <input id="fNome" placeholder="Seu nome completo" value="">
+    <input id="fNome" placeholder="Seu nome completo">
 
     <label>CPF *</label>
     <input id="fCpf" placeholder="000.000.000-00" maxlength="14">
@@ -209,11 +211,10 @@ area.innerHTML = `
       <option value="G">Fralda G</option>
     </select>
 
-    <label>Vai trazer mimo?</label>
-    <select id="fMimo">
-      <option value="sim" selected>Sim, vou trazer um mimo</option>
-      <option value="nao">Não vou trazer mimo</option>
-    </select>
+    <div style="background:#fff3e0;border-left:5px solid #ef6c00;border-radius:12px;padding:12px 15px;margin-top:15px;font-size:0.92em;">
+      🎁 <strong style="color:#e65100;">Mimo obrigatório!</strong><br>
+      <span style="color:#666;">Cada convidado deve trazer <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.</span>
+    </div>
 
     <div class="acompanhantes">
       <label>👥 Acompanhantes (além de você)</label>
@@ -227,7 +228,6 @@ area.innerHTML = `
   </div>
 `;
 
-// Máscara de CPF
 function mascaraCPF(input) {
   input.addEventListener('input', () => {
     let v = input.value.replace(/\D/g, '').slice(0, 11);
@@ -240,7 +240,6 @@ function mascaraCPF(input) {
 
 mascaraCPF(document.getElementById('fCpf'));
 
-// Acompanhantes
 const listaAcomp = document.getElementById('listaAcomp');
 let contAcomp = 0;
 
@@ -261,7 +260,6 @@ function adicionarAcompanhante() {
 
 document.getElementById('btnAddAcomp').addEventListener('click', adicionarAcompanhante);
 
-// Enviar
 document.getElementById('btnEnviar').addEventListener('click', async () => {
   const btn = document.getElementById('btnEnviar');
   const erro = document.getElementById('erro');
@@ -271,12 +269,11 @@ document.getElementById('btnEnviar').addEventListener('click', async () => {
   const cpf = document.getElementById('fCpf').value.trim();
   const email = document.getElementById('fEmail').value.trim().toLowerCase();
   const fralda = document.getElementById('fFralda').value;
-  const mimo = document.getElementById('fMimo').value;
+  const mimo = 'sim';
 
   if (!nome) { erro.textContent = '⚠️ Preencha seu nome'; return; }
   if (cpf.replace(/\D/g,'').length !== 11) { erro.textContent = '⚠️ CPF inválido'; return; }
 
-  // Coletar acompanhantes
   const acompanhantes = [];
   const itens = document.querySelectorAll('.acomp-item');
   for (const item of itens) {
@@ -294,11 +291,9 @@ document.getElementById('btnEnviar').addEventListener('click', async () => {
   btn.textContent = '⏳ Enviando...';
 
   try {
-    // ID do documento = CPF (só números) — garante 1 cadastro por pessoa
     const cpfLimpo = cpf.replace(/\D/g, '');
     const idDoc = cpfLimpo;
 
-    // Verifica se já existe
     const jaExiste = await getDocs(query(collection(db, 'convidados'), where('cpfLimpo', '==', cpfLimpo)));
     if (!jaExiste.empty) {
       erro.textContent = '⚠️ Este CPF já confirmou presença. Se precisar alterar, fale com Moises ou Beatriz.';
@@ -321,7 +316,7 @@ document.getElementById('btnEnviar').addEventListener('click', async () => {
         <h3>🌸 Presença confirmada!</h3>
         <p>Obrigado, <strong>${nome}</strong>!</p>
         <p>Você confirmou <strong>${1 + acompanhantes.length}</strong> pessoa(s) e vai trazer <strong>fralda ${fralda}</strong>.</p>
-        ${mimo === 'sim' ? '<p>🎁 E um mimo especial — a Aurora agradece! 💕</p>' : ''}
+        <p>🎁 E um mimo especial — a Aurora agradece! 💕</p>
         <p style="margin-top:20px;">Nos vemos em <strong>29 de Novembro de 2026</strong>!</p>
         <p style="font-size:0.9em;color:#666;">📍 Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
       </div>
