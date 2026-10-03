@@ -6,33 +6,26 @@
 <style>
   body {
     font-family: 'Comic Sans MS', 'Quicksand', sans-serif;
-    margin: 0;
-    padding: 30px 15px;
+    margin: 0; padding: 30px 15px;
     min-height: 100vh;
     background: linear-gradient(180deg, #ffe4ec 0%, #f8d7f0 40%, #e6d5f5 70%, #d5e5f7 100%);
     background-attachment: fixed;
   }
-  .container { max-width: 1050px; margin: 0 auto; }
+  .container { max-width: 1150px; margin: 0 auto; }
   .card {
     background: rgba(255,255,255,0.94);
-    border-radius: 25px;
-    padding: 40px;
+    border-radius: 25px; padding: 40px;
     box-shadow: 0 15px 50px rgba(194,24,91,0.18);
     border: 3px dashed #f8bbd0;
   }
   h1 { color: #c2185b; text-shadow: 2px 2px 0 #ffe4ec; }
   h2 { color: #7b1fa2; margin-top: 30px; }
-  input, select, button {
-    padding: 10px; margin: 5px 0; border-radius: 12px;
-    border: 2px solid #f8bbd0; font-size: 15px; font-family: inherit;
-  }
   .btn {
     background: linear-gradient(135deg, #f06292, #c2185b);
     color: white; border: none; cursor: pointer;
     padding: 10px 20px; font-weight: bold;
     box-shadow: 0 4px 12px rgba(194,24,91,0.3);
-    border-radius: 12px;
-    font-size: 14px;
+    border-radius: 12px; font-size: 14px;
   }
   .btn:hover { transform: translateY(-2px); }
   .btn-verde { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
@@ -43,26 +36,24 @@
     background: white; border-radius: 15px; overflow: hidden;
     box-shadow: 0 4px 15px rgba(194,24,91,0.1);
   }
-  th, td { padding: 10px; border-bottom: 1px solid #fce4ec; text-align: left; font-size: 14px; }
-  th { background: #fce4ec; color: #c2185b; font-size: 14px; }
+  th, td { padding: 10px; border-bottom: 1px solid #fce4ec; text-align: left; font-size: 13px; vertical-align: top; }
+  th { background: #fce4ec; color: #c2185b; font-size: 13px; }
   .ok { color: #2e7d32; font-weight: bold; }
   .no { color: #999; }
-  #msg { font-weight: bold; margin: 10px 0; }
-  a { color: #c2185b; }
   .stats { display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
   .stat {
-    flex: 1; min-width: 140px; padding: 20px; border-radius: 18px;
+    flex: 1; min-width: 130px; padding: 20px; border-radius: 18px;
     text-align: center; color: white; font-weight: bold;
     box-shadow: 0 6px 20px rgba(0,0,0,0.12);
   }
-  .stat .num { font-size: 32px; display: block; }
-  .stat .lbl { font-size: 13px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
-  .stat.total      { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
-  .stat.confirmado { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
-  .stat.pendente   { background: linear-gradient(135deg, #ffb74d, #ef6c00); }
-  .stat.fraldas    { background: linear-gradient(135deg, #4fc3f7, #0277bd); }
-
-  /* Modal de edição */
+  .stat .num { font-size: 30px; display: block; }
+  .stat .lbl { font-size: 12px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
+  .stat.total   { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
+  .stat.pessoas { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
+  .stat.m       { background: linear-gradient(135deg, #f06292, #c2185b); }
+  .stat.g       { background: linear-gradient(135deg, #4fc3f7, #0277bd); }
+  .lista-acomp { font-size: 12px; color: #666; margin-top: 4px; }
+  .lista-acomp div { padding: 2px 0; }
   .modal-bg {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 100;
@@ -71,57 +62,45 @@
   .modal-bg.ativo { display: flex; }
   .modal {
     background: white; padding: 30px; border-radius: 20px;
-    max-width: 420px; width: 90%;
+    max-width: 480px; width: 90%;
     border: 3px dashed #f8bbd0;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-height: 90vh; overflow-y: auto;
   }
   .modal h3 { color: #c2185b; margin-top: 0; }
-  .modal input, .modal select { width: 100%; box-sizing: border-box; }
+  .modal input, .modal select { width: 100%; box-sizing: border-box; padding: 8px; border-radius: 8px; border: 2px solid #f8bbd0; margin: 4px 0; font-family: inherit; }
   .modal-botoes { display: flex; gap: 10px; margin-top: 15px; }
+  .acomp-edit { display: flex; gap: 6px; margin-bottom: 6px; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="card">
     <h1>🌸 Painel Admin — Chá da Aurora</h1>
+    <p style="color:#7b1fa2;">📤 Compartilhe este link com todos os convidados: 
+      <input id="linkCompartilhavel" readonly style="width:60%;padding:8px;border-radius:8px;border:2px solid #f8bbd0;font-size:13px;">
+      <button class="btn btn-mini btn-verde" onclick="copiarLink()">📋 Copiar</button>
+    </p>
 
-    <h2>✨ Cadastrar convidado</h2>
-    <input id="nome" placeholder="Nome do convidado">
-    <input id="email" placeholder="E-mail do convidado">
-    <select id="fralda">
-      <option value="M" selected>Fralda M</option>
-      <option value="G">Fralda G</option>
-    </select>
-    <select id="mimo">
-      <option value="sim">Com mimo</option>
-      <option value="nao">Sem mimo</option>
-    </select>
-    <button id="btnCadastrar" class="btn">Cadastrar</button>
-    <p id="msg"></p>
-
-    <h2>📊 Relatório</h2>
+    <h2>📊 Relatório geral</h2>
     <div class="stats">
-      <div class="stat total"><span class="num" id="statTotal">0</span><span class="lbl">Total</span></div>
-      <div class="stat confirmado"><span class="num" id="statConf">0</span><span class="lbl">Confirmados</span></div>
-      <div class="stat pendente"><span class="num" id="statPend">0</span><span class="lbl">Pendentes</span></div>
-      <div class="stat fraldas"><span class="num" id="statFraldas">0</span><span class="lbl">Fraldas</span></div>
+      <div class="stat total"><span class="num" id="statTotal">0</span><span class="lbl">Confirmaram</span></div>
+      <div class="stat pessoas"><span class="num" id="statPessoas">0</span><span class="lbl">Pessoas total</span></div>
+      <div class="stat m"><span class="num" id="statM">0</span><span class="lbl">Fralda M</span></div>
+      <div class="stat g"><span class="num" id="statG">0</span><span class="lbl">Fralda G</span></div>
     </div>
 
-    <h2>🎀 Lista de convidados</h2>
-    <div style="margin: 10px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-      <div>
-        <label><input type="radio" name="filtro" value="todos" checked> Todos</label>
-        <label style="margin-left:15px;"><input type="radio" name="filtro" value="confirmados"> Confirmados</label>
-        <label style="margin-left:15px;"><input type="radio" name="filtro" value="pendentes"> Pendentes</label>
-      </div>
+    <h2>🎀 Lista de confirmados</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:10px;">
+      <input id="busca" placeholder="🔍 Buscar por nome ou CPF..." style="padding:10px;border-radius:12px;border:2px solid #f8bbd0;width:300px;font-family:inherit;">
       <button class="btn btn-azul" onclick="imprimirRelatorio()">🖨️ Imprimir relatório</button>
     </div>
 
     <table>
       <thead>
         <tr>
-          <th>Nome</th><th>E-mail</th><th>Fralda</th>
-          <th>Mimo</th><th>Confirmou?</th><th>Ações</th>
+          <th>Nome</th><th>CPF</th><th>E-mail</th><th>Fralda</th>
+          <th>Mimo</th><th>Pessoas</th><th>Ações</th>
         </tr>
       </thead>
       <tbody id="lista"></tbody>
@@ -129,20 +108,23 @@
   </div>
 </div>
 
-<!-- Modal de edição -->
 <div class="modal-bg" id="modal">
   <div class="modal">
     <h3>✏️ Editar convidado</h3>
-    <input id="editNome" placeholder="Nome">
-    <input id="editEmail" placeholder="E-mail" disabled style="background:#f5f5f5;">
-    <select id="editFralda">
-      <option value="M">Fralda M</option>
-      <option value="G">Fralda G</option>
-    </select>
-    <select id="editMimo">
-      <option value="sim">Com mimo</option>
-      <option value="nao">Sem mimo</option>
-    </select>
+    <input id="editId" type="hidden">
+    <label style="font-size:0.85em;color:#7b1fa2;">Nome</label>
+    <input id="editNome">
+    <label style="font-size:0.85em;color:#7b1fa2;">CPF</label>
+    <input id="editCpf" maxlength="14">
+    <label style="font-size:0.85em;color:#7b1fa2;">E-mail</label>
+    <input id="editEmail">
+    <label style="font-size:0.85em;color:#7b1fa2;">Fralda</label>
+    <select id="editFralda"><option value="M">M</option><option value="G">G</option></select>
+    <label style="font-size:0.85em;color:#7b1fa2;">Mimo</label>
+    <select id="editMimo"><option value="sim">Sim</option><option value="nao">Não</option></select>
+    <label style="font-size:0.85em;color:#7b1fa2;margin-top:10px;display:block;">Acompanhantes</label>
+    <div id="editAcomp"></div>
+    <button type="button" class="btn btn-mini btn-azul" onclick="addAcompEdit()">➕ Adicionar</button>
     <div class="modal-botoes">
       <button class="btn btn-verde" onclick="salvarEdicao()">💾 Salvar</button>
       <button class="btn" onclick="fecharModal()" style="background:#999;">Cancelar</button>
@@ -154,99 +136,106 @@
 import { db } from './firebase.js';
 import { collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-document.getElementById('btnCadastrar').addEventListener('click', async () => {
-  const nome = document.getElementById('nome').value.trim();
-  const email = document.getElementById('email').value.trim().toLowerCase();
-  const fralda = document.getElementById('fralda').value;
-  const mimo = document.getElementById('mimo').value;
-  const msg = document.getElementById('msg');
+// Link compartilhável
+const linkCompartilhavel = location.origin + location.pathname.replace('admin.html', 'index.html');
+document.getElementById('linkCompartilhavel').value = linkCompartilhavel;
 
-  if (!nome || !email) {
-    msg.textContent = '⚠️ Preencha nome e e-mail';
-    msg.style.color = 'orange';
-    return;
-  }
-  try {
-    await setDoc(doc(db, 'convidados', email), {
-      nome, email, fralda, mimo,
-      confirmado: false,
-      criadoEm: new Date().toISOString()
-    });
-    msg.textContent = '✅ Convidado cadastrado!';
-    msg.style.color = 'green';
-    document.getElementById('nome').value = '';
-    document.getElementById('email').value = '';
-  } catch (e) {
-    console.error(e);
-    msg.textContent = '❌ Erro: ' + e.message;
-    msg.style.color = 'red';
-  }
-});
+window.copiarLink = function() {
+  navigator.clipboard.writeText(linkCompartilhavel);
+  alert('Link copiado! ✅\n\nEnvie para todos os convidados.');
+};
 
-let todosConvidados = [];
+let convidados = [];
 onSnapshot(collection(db, 'convidados'), (snap) => {
-  todosConvidados = [];
-  snap.forEach(d => todosConvidados.push(d.data()));
+  convidados = [];
+  snap.forEach(d => convidados.push({ id: d.id, ...d.data() }));
   atualizarStats();
   renderLista();
 });
 
-document.querySelectorAll('input[name="filtro"]').forEach(r => {
-  r.addEventListener('change', renderLista);
-});
+document.getElementById('busca').addEventListener('input', renderLista);
 
 function atualizarStats() {
-  const total = todosConvidados.length;
-  const confirmados = todosConvidados.filter(c => c.confirmado).length;
-  const pendentes = total - confirmados;
-  const contagem = {};
-  todosConvidados.forEach(c => { contagem[c.fralda] = (contagem[c.fralda] || 0) + 1; });
-  const fraldasTexto = Object.entries(contagem).map(([k,v]) => v+' '+k).join(' · ') || '0';
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statConf').textContent = confirmados;
-  document.getElementById('statPend').textContent = pendentes;
-  document.getElementById('statFraldas').textContent = fraldasTexto;
+  document.getElementById('statTotal').textContent = convidados.length;
+  const totalPessoas = convidados.reduce((s, c) => s + (c.totalPessoas || 1), 0);
+  document.getElementById('statPessoas').textContent = totalPessoas;
+  document.getElementById('statM').textContent = convidados.filter(c => c.fralda === 'M').length;
+  document.getElementById('statG').textContent = convidados.filter(c => c.fralda === 'G').length;
 }
 
 function renderLista() {
-  const filtro = document.querySelector('input[name="filtro"]:checked').value;
+  const busca = document.getElementById('busca').value.toLowerCase();
   const lista = document.getElementById('lista');
   lista.innerHTML = '';
-  let filtrados = todosConvidados;
-  if (filtro === 'confirmados') filtrados = todosConvidados.filter(c => c.confirmado);
-  if (filtro === 'pendentes') filtrados = todosConvidados.filter(c => !c.confirmado);
+
+  let filtrados = convidados;
+  if (busca) {
+    filtrados = convidados.filter(c =>
+      (c.nome || '').toLowerCase().includes(busca) ||
+      (c.cpf || '').toLowerCase().includes(busca)
+    );
+  }
 
   if (filtrados.length === 0) {
-    lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">Nenhum convidado aqui ainda 🌸</td></tr>';
+    lista.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">Nenhum convidado aqui ainda 🌸</td></tr>';
     return;
   }
+
   filtrados.forEach(c => {
-    const base = location.origin + location.pathname.replace('admin.html', 'index.html');
-    const link = base + '?email=' + encodeURIComponent(c.email);
+    const acomps = (c.acompanhantes || []).map(a =>
+      `<div>• ${a.nome} — ${a.cpf}</div>`
+    ).join('');
     lista.innerHTML += '<tr>' +
-      '<td>'+c.nome+'</td>' +
-      '<td>'+c.email+'</td>' +
-      '<td>'+c.fralda+'</td>' +
-      '<td>'+c.mimo+'</td>' +
-      '<td class="'+(c.confirmado?'ok':'no')+'">'+(c.confirmado?'Sim ✅':'Ainda não')+'</td>' +
+      '<td><strong>'+c.nome+'</strong>'+(acomps?'<div class="lista-acomp">'+acomps+'</div>':'')+'</td>' +
+      '<td>'+(c.cpf||'-')+'</td>' +
+      '<td>'+(c.email||'-')+'</td>' +
+      '<td><strong>'+c.fralda+'</strong></td>' +
+      '<td>'+(c.mimo === 'sim' ? '🎁 Sim' : 'Não')+'</td>' +
+      '<td><strong>'+(c.totalPessoas||1)+'</strong></td>' +
       '<td>' +
-        '<button class="btn btn-mini btn-verde" onclick="editarConvidado(\''+c.email+'\')">✏️</button> ' +
-        '<button class="btn btn-mini" onclick="excluirConvidado(\''+c.email+'\', \''+c.nome.replace(/'/g,"")+'\')" style="background:linear-gradient(135deg,#ef5350,#c62828)">🗑️</button> ' +
-        '<a class="btn btn-mini btn-azul" href="'+link+'" target="_blank" style="text-decoration:none;display:inline-block;">🔗</a>' +
+        '<button class="btn btn-mini btn-verde" onclick="editar(\''+c.id+'\')">✏️</button> ' +
+        '<button class="btn btn-mini" onclick="excluir(\''+c.id+'\',\''+c.nome.replace(/'/g,"")+'\')" style="background:linear-gradient(135deg,#ef5350,#c62828)">🗑️</button>' +
       '</td>' +
       '</tr>';
   });
 }
 
-/* ============ EDITAR ============ */
-window.editarConvidado = function(email) {
-  const c = todosConvidados.find(x => x.email === email);
+/* EDITAR */
+window.editar = function(id) {
+  const c = convidados.find(x => x.id === id);
   if (!c) return;
-  document.getElementById('editNome').value = c.nome;
-  document.getElementById('editEmail').value = c.email;
-  document.getElementById('editFralda').value = c.fralda;
-  document.getElementById('editMimo').value = c.mimo;
+  document.getElementById('editId').value = id;
+  document.getElementById('editNome').value = c.nome || '';
+  document.getElementById('editCpf').value = c.cpf || '';
+  document.getElementById('editEmail').value = c.email || '';
+  document.getElementById('editFralda').value = c.fralda || 'M';
+  document.getElementById('editMimo').value = c.mimo || 'sim';
+
+  const container = document.getElementById('editAcomp');
+  container.innerHTML = '';
+  (c.acompanhantes || []).forEach(a => addAcompEdit(a.nome, a.cpf));
+
   document.getElementById('modal').classList.add('ativo');
+};
+
+window.addAcompEdit = function(nome = '', cpf = '') {
+  const container = document.getElementById('editAcomp');
+  const div = document.createElement('div');
+  div.className = 'acomp-edit';
+  div.innerHTML = `
+    <input placeholder="Nome" value="${nome}" style="flex:2;">
+    <input placeholder="CPF" value="${cpf}" maxlength="14" style="flex:1.5;">
+    <button type="button" class="btn btn-mini" onclick="this.parentElement.remove()" style="background:#ef5350;">✕</button>
+  `;
+  container.appendChild(div);
+  const cpfInput = div.querySelectorAll('input')[1];
+  cpfInput.addEventListener('input', () => {
+    let v = cpfInput.value.replace(/\D/g,'').slice(0,11);
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    cpfInput.value = v;
+  });
 };
 
 window.fecharModal = function() {
@@ -254,85 +243,77 @@ window.fecharModal = function() {
 };
 
 window.salvarEdicao = async function() {
-  const email = document.getElementById('editEmail').value;
+  const id = document.getElementById('editId').value;
   const nome = document.getElementById('editNome').value.trim();
+  const cpf = document.getElementById('editCpf').value.trim();
+  const email = document.getElementById('editEmail').value.trim().toLowerCase();
   const fralda = document.getElementById('editFralda').value;
   const mimo = document.getElementById('editMimo').value;
-  const original = todosConvidados.find(x => x.email === email);
+  const original = convidados.find(x => x.id === id);
 
-  try {
-    await setDoc(doc(db, 'convidados', email), {
-      nome, email, fralda, mimo,
-      confirmado: original.confirmado,
-      criadoEm: original.criadoEm
-    });
-    fecharModal();
-  } catch (e) {
-    alert('Erro ao salvar: ' + e.message);
-  }
+  const acompanhantes = [];
+  document.querySelectorAll('#editAcomp .acomp-edit').forEach(div => {
+    const ins = div.querySelectorAll('input');
+    const n = ins[0].value.trim();
+    const c = ins[1].value.trim();
+    if (n && c) acompanhantes.push({ nome: n, cpf: c });
+  });
+
+  await setDoc(doc(db, 'convidados', id), {
+    ...original,
+    nome, cpf, cpfLimpo: cpf.replace(/\D/g,''), email, fralda, mimo,
+    acompanhantes,
+    totalPessoas: 1 + acompanhantes.length
+  });
+  fecharModal();
 };
 
-/* ============ EXCLUIR ============ */
-window.excluirConvidado = async function(email, nome) {
-  if (!confirm('Tem certeza que deseja excluir "' + nome + '"?\n\nEssa ação não pode ser desfeita.')) return;
-  try {
-    await deleteDoc(doc(db, 'convidados', email));
-  } catch (e) {
-    alert('Erro ao excluir: ' + e.message);
-  }
+window.excluir = async function(id, nome) {
+  if (!confirm('Excluir "' + nome + '"? Essa ação não pode ser desfeita.')) return;
+  await deleteDoc(doc(db, 'convidados', id));
 };
 
-/* ============ IMPRIMIR ============ */
+/* IMPRIMIR */
 window.imprimirRelatorio = function() {
-  const confirmados = todosConvidados.filter(c => c.confirmado);
-  const pendentes = todosConvidados.filter(c => !c.confirmado);
+  const totalPessoas = convidados.reduce((s,c) => s + (c.totalPessoas||1), 0);
 
   let html = `
-    <html><head><meta charset="UTF-8">
-    <title>Relatório — Chá da Aurora</title>
+    <html><head><meta charset="UTF-8"><title>Relatório — Chá da Aurora</title>
     <style>
-      body { font-family: Arial, sans-serif; padding: 30px; color: #333; }
-      h1 { color: #c2185b; border-bottom: 3px solid #c2185b; padding-bottom: 10px; }
-      h2 { color: #7b1fa2; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-      table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-      th, td { border: 1px solid #ccc; padding: 8px; text-align: left; font-size: 13px; }
+      body { font-family: Arial, sans-serif; padding: 25px; color: #333; }
+      h1 { color: #c2185b; border-bottom: 3px solid #c2185b; padding-bottom: 8px; }
+      h2 { color: #7b1fa2; margin-top: 25px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      th, td { border: 1px solid #ccc; padding: 6px; text-align: left; font-size: 12px; }
       th { background: #fce4ec; color: #c2185b; }
-      .resumo { background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 20px 0; }
-      .resumo span { display: inline-block; margin-right: 25px; font-size: 15px; }
-      .rodape { margin-top: 40px; font-size: 11px; color: #999; text-align: center; }
-      @media print { body { padding: 15px; } }
-    </style>
-    </head><body>
+      .resumo { background: #f5f5f5; padding: 12px; border-radius: 8px; margin: 15px 0; }
+      .resumo span { display: inline-block; margin-right: 20px; font-size: 14px; }
+      .rodape { margin-top: 30px; font-size: 10px; color: #999; text-align: center; }
+      .acomp { font-size: 10px; color: #666; }
+      @media print { body { padding: 10px; } }
+    </style></head><body>
     <h1>🌸 Relatório — Chá de Bebê da Aurora</h1>
-    <p><strong>Data do chá:</strong> 29 de Novembro de 2026</p>
-    <p><strong>Local:</strong> Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
+    <p><strong>Data:</strong> 29 de Novembro de 2026 &nbsp;|&nbsp;
+    <strong>Local:</strong> Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
     <p><strong>Gerado em:</strong> ${new Date().toLocaleString('pt-BR')}</p>
 
     <div class="resumo">
-      <span>👥 <strong>Total:</strong> ${todosConvidados.length}</span>
-      <span>✅ <strong>Confirmados:</strong> ${confirmados.length}</span>
-      <span>⏳ <strong>Pendentes:</strong> ${pendentes.length}</span>
+      <span>👥 <strong>Confirmações:</strong> ${convidados.length}</span>
+      <span>🧑‍🤝‍🧑 <strong>Pessoas total:</strong> ${totalPessoas}</span>
+      <span>👶 <strong>Fraldas M:</strong> ${convidados.filter(c=>c.fralda==='M').length}</span>
+      <span>👶 <strong>Fraldas G:</strong> ${convidados.filter(c=>c.fralda==='G').length}</span>
     </div>
 
-    <h2>✅ Confirmados (${confirmados.length})</h2>
+    <h2>Lista de confirmados</h2>
     <table>
-      <tr><th>#</th><th>Nome</th><th>E-mail</th><th>Fralda</th><th>Mimo</th></tr>
-      ${confirmados.length ? confirmados.map((c,i) =>
-        `<tr><td>${i+1}</td><td>${c.nome}</td><td>${c.email}</td><td>${c.fralda}</td><td>${c.mimo}</td></tr>`
-      ).join('') : '<tr><td colspan="5" style="text-align:center;color:#999;">Nenhum confirmado ainda</td></tr>'}
+      <tr><th>#</th><th>Nome</th><th>CPF</th><th>Fralda</th><th>Mimo</th><th>Pessoas</th></tr>
+      ${convidados.length ? convidados.map((c,i) => {
+        const acomps = (c.acompanhantes||[]).map(a => `<div class="acomp">↳ ${a.nome} — ${a.cpf}</div>`).join('');
+        return `<tr><td>${i+1}</td><td>${c.nome}${acomps}</td><td>${c.cpf||'-'}</td><td>${c.fralda}</td><td>${c.mimo}</td><td>${c.totalPessoas||1}</td></tr>`;
+      }).join('') : '<tr><td colspan="6" style="text-align:center;">Nenhum confirmado ainda</td></tr>'}
     </table>
 
-    <h2>⏳ Pendentes (${pendentes.length})</h2>
-    <table>
-      <tr><th>#</th><th>Nome</th><th>E-mail</th><th>Fralda</th><th>Mimo</th></tr>
-      ${pendentes.length ? pendentes.map((c,i) =>
-        `<tr><td>${i+1}</td><td>${c.nome}</td><td>${c.email}</td><td>${c.fralda}</td><td>${c.mimo}</td></tr>`
-      ).join('') : '<tr><td colspan="5" style="text-align:center;color:#999;">Nenhum pendente 🎉</td></tr>'}
-    </table>
-
-    <div class="rodape">
-      Relatório gerado pelo painel admin — Chá da Aurora 🌟
-    </div>
+    <div class="rodape">Relatório gerado pelo painel admin — Chá da Aurora 🌟</div>
     </body></html>
   `;
 
