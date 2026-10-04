@@ -17,7 +17,7 @@
     background-attachment: fixed;
     background-repeat: no-repeat;
   }
-  .container { max-width: 1150px; margin: 0 auto; }
+  .container { max-width: 1050px; margin: 0 auto; }
   .card {
     background: rgba(255,255,255,0.94);
     border-radius: 25px; padding: 40px;
@@ -53,11 +53,8 @@
   .stat .num { font-size: 30px; display: block; }
   .stat .lbl { font-size: 12px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
   .stat.total   { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
-  .stat.pessoas { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
   .stat.m       { background: linear-gradient(135deg, #f06292, #c2185b); }
   .stat.g       { background: linear-gradient(135deg, #4fc3f7, #0277bd); }
-  .lista-acomp { font-size: 12px; color: #666; margin-top: 4px; }
-  .lista-acomp div { padding: 2px 0; }
   .modal-bg {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 100;
@@ -74,7 +71,6 @@
   .modal h3 { color: #c2185b; margin-top: 0; }
   .modal input, .modal select { width: 100%; box-sizing: border-box; padding: 8px; border-radius: 8px; border: 2px solid #f8bbd0; margin: 4px 0; font-family: inherit; }
   .modal-botoes { display: flex; gap: 10px; margin-top: 15px; }
-  .acomp-edit { display: flex; gap: 6px; margin-bottom: 6px; }
 </style>
 </head>
 <body>
@@ -89,7 +85,6 @@
     <h2>📊 Relatório geral</h2>
     <div class="stats">
       <div class="stat total"><span class="num" id="statTotal">0</span><span class="lbl">Confirmações</span></div>
-      <div class="stat pessoas"><span class="num" id="statPessoas">0</span><span class="lbl">Pessoas total</span></div>
       <div class="stat m"><span class="num" id="statM">0</span><span class="lbl">Fralda M</span></div>
       <div class="stat g"><span class="num" id="statG">0</span><span class="lbl">Fralda G</span></div>
     </div>
@@ -103,8 +98,7 @@
     <table>
       <thead>
         <tr>
-          <th>Nome</th><th>CPF</th><th>E-mail</th><th>Fralda</th>
-          <th>Pessoas</th><th>Ações</th>
+          <th>Nome</th><th>CPF</th><th>E-mail</th><th>Fralda</th><th>Ações</th>
         </tr>
       </thead>
       <tbody id="lista"></tbody>
@@ -124,9 +118,6 @@
     <input id="editEmail">
     <label style="font-size:0.85em;color:#7b1fa2;">Fralda</label>
     <select id="editFralda"><option value="M">M</option><option value="G">G</option></select>
-    <label style="font-size:0.85em;color:#7b1fa2;margin-top:10px;display:block;">Acompanhantes</label>
-    <div id="editAcomp"></div>
-    <button type="button" class="btn btn-mini btn-azul" onclick="addAcompEdit()">➕ Adicionar</button>
     <div class="modal-botoes">
       <button class="btn btn-verde" onclick="salvarEdicao()">💾 Salvar</button>
       <button class="btn" onclick="fecharModal()" style="background:#999;">Cancelar</button>
@@ -158,8 +149,6 @@ document.getElementById('busca').addEventListener('input', renderLista);
 
 function atualizarStats() {
   document.getElementById('statTotal').textContent = convidados.length;
-  const totalPessoas = convidados.reduce((s, c) => s + (c.totalPessoas || 1), 0);
-  document.getElementById('statPessoas').textContent = totalPessoas;
   document.getElementById('statM').textContent = convidados.filter(c => c.fralda === 'M').length;
   document.getElementById('statG').textContent = convidados.filter(c => c.fralda === 'G').length;
 }
@@ -178,20 +167,16 @@ function renderLista() {
   }
 
   if (filtrados.length === 0) {
-    lista.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">Nenhum convidado aqui ainda 🌸</td></tr>';
+    lista.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:30px;">Nenhum convidado aqui ainda 🌸</td></tr>';
     return;
   }
 
   filtrados.forEach(c => {
-    const acomps = (c.acompanhantes || []).map(a =>
-      `<div>• ${a.nome} — ${a.cpf}</div>`
-    ).join('');
     lista.innerHTML += '<tr>' +
-      '<td><strong>'+c.nome+'</strong>'+(acomps?'<div class="lista-acomp">'+acomps+'</div>':'')+'</td>' +
+      '<td><strong>'+c.nome+'</strong></td>' +
       '<td>'+(c.cpf||'-')+'</td>' +
       '<td>'+(c.email||'-')+'</td>' +
       '<td><strong>'+c.fralda+'</strong></td>' +
-      '<td><strong>'+(c.totalPessoas||1)+'</strong></td>' +
       '<td>' +
         '<button class="btn btn-mini btn-verde" onclick="editar(\''+c.id+'\')">✏️</button> ' +
         '<button class="btn btn-mini" onclick="excluir(\''+c.id+'\',\''+c.nome.replace(/'/g,"")+'\')" style="background:linear-gradient(135deg,#ef5350,#c62828)">🗑️</button>' +
@@ -208,32 +193,7 @@ window.editar = function(id) {
   document.getElementById('editCpf').value = c.cpf || '';
   document.getElementById('editEmail').value = c.email || '';
   document.getElementById('editFralda').value = c.fralda || 'M';
-
-  const container = document.getElementById('editAcomp');
-  container.innerHTML = '';
-  (c.acompanhantes || []).forEach(a => addAcompEdit(a.nome, a.cpf));
-
   document.getElementById('modal').classList.add('ativo');
-};
-
-window.addAcompEdit = function(nome = '', cpf = '') {
-  const container = document.getElementById('editAcomp');
-  const div = document.createElement('div');
-  div.className = 'acomp-edit';
-  div.innerHTML = `
-    <input placeholder="Nome" value="${nome}" style="flex:2;">
-    <input placeholder="CPF" value="${cpf}" maxlength="14" style="flex:1.5;">
-    <button type="button" class="btn btn-mini" onclick="this.parentElement.remove()" style="background:#ef5350;">✕</button>
-  `;
-  container.appendChild(div);
-  const cpfInput = div.querySelectorAll('input')[1];
-  cpfInput.addEventListener('input', () => {
-    let v = cpfInput.value.replace(/\D/g,'').slice(0,11);
-    v = v.replace(/(\d{3})(\d)/, '$1.$2');
-    v = v.replace(/(\d{3})(\d)/, '$1.$2');
-    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    cpfInput.value = v;
-  });
 };
 
 window.fecharModal = function() {
@@ -248,19 +208,9 @@ window.salvarEdicao = async function() {
   const fralda = document.getElementById('editFralda').value;
   const original = convidados.find(x => x.id === id);
 
-  const acompanhantes = [];
-  document.querySelectorAll('#editAcomp .acomp-edit').forEach(div => {
-    const ins = div.querySelectorAll('input');
-    const n = ins[0].value.trim();
-    const c = ins[1].value.trim();
-    if (n && c) acompanhantes.push({ nome: n, cpf: c });
-  });
-
   await setDoc(doc(db, 'convidados', id), {
     ...original,
-    nome, cpf, cpfLimpo: cpf.replace(/\D/g,''), email, fralda,
-    acompanhantes,
-    totalPessoas: 1 + acompanhantes.length
+    nome, cpf, cpfLimpo: cpf.replace(/\D/g,''), email, fralda
   });
   fecharModal();
 };
@@ -271,8 +221,6 @@ window.excluir = async function(id, nome) {
 };
 
 window.imprimirRelatorio = function() {
-  const totalPessoas = convidados.reduce((s,c) => s + (c.totalPessoas||1), 0);
-
   let html = `
     <html><head><meta charset="UTF-8"><title>Relatório — Chá da Aurora</title>
     <style>
@@ -285,7 +233,6 @@ window.imprimirRelatorio = function() {
       .resumo { background: #f5f5f5; padding: 12px; border-radius: 8px; margin: 15px 0; }
       .resumo span { display: inline-block; margin-right: 20px; font-size: 14px; }
       .rodape { margin-top: 30px; font-size: 10px; color: #999; text-align: center; }
-      .acomp { font-size: 10px; color: #666; }
       @media print { body { padding: 10px; } }
     </style></head><body>
     <h1>🌸 Relatório — Chá de Bebê da Aurora</h1>
@@ -295,18 +242,16 @@ window.imprimirRelatorio = function() {
 
     <div class="resumo">
       <span>👥 <strong>Confirmações:</strong> ${convidados.length}</span>
-      <span>🧑‍🤝‍🧑 <strong>Pessoas total:</strong> ${totalPessoas}</span>
       <span>👶 <strong>Fraldas M:</strong> ${convidados.filter(c=>c.fralda==='M').length}</span>
       <span>👶 <strong>Fraldas G:</strong> ${convidados.filter(c=>c.fralda==='G').length}</span>
     </div>
 
     <h2>Lista de confirmados</h2>
     <table>
-      <tr><th>#</th><th>Nome</th><th>CPF</th><th>Fralda</th><th>Pessoas</th></tr>
-      ${convidados.length ? convidados.map((c,i) => {
-        const acomps = (c.acompanhantes||[]).map(a => `<div class="acomp">↳ ${a.nome} — ${a.cpf}</div>`).join('');
-        return `<tr><td>${i+1}</td><td>${c.nome}${acomps}</td><td>${c.cpf||'-'}</td><td>${c.fralda}</td><td>${c.totalPessoas||1}</td></tr>`;
-      }).join('') : '<tr><td colspan="5" style="text-align:center;">Nenhum confirmado ainda</td></tr>'}
+      <tr><th>#</th><th>Nome</th><th>CPF</th><th>Fralda</th></tr>
+      ${convidados.length ? convidados.map((c,i) =>
+        `<tr><td>${i+1}</td><td>${c.nome}</td><td>${c.cpf||'-'}</td><td>${c.fralda}</td></tr>`
+      ).join('') : '<tr><td colspan="4" style="text-align:center;">Nenhum confirmado ainda</td></tr>'}
     </table>
 
     <div class="rodape">Relatório gerado pelo painel admin — Chá da Aurora 🌟</div>
