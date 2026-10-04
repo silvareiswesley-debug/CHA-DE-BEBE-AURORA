@@ -71,28 +71,6 @@
   }
   .form input:focus, .form select:focus { outline: none; border-color: #f06292; }
 
-  .acompanhantes { margin-top: 20px; }
-  .acomp-item {
-    display: flex; gap: 8px; align-items: center;
-    background: white; padding: 10px; border-radius: 12px;
-    margin-bottom: 8px; border: 2px solid #fce4ec;
-  }
-  .acomp-item input { margin: 0; }
-  .acomp-item .btn-remover {
-    background: #ef5350; color: white; border: none;
-    border-radius: 8px; padding: 8px 12px; cursor: pointer;
-    font-weight: bold; flex-shrink: 0;
-  }
-
-  .btn-add {
-    background: #fff; color: #c2185b;
-    border: 2px dashed #f06292; border-radius: 12px;
-    padding: 10px 15px; cursor: pointer;
-    font-weight: bold; width: 100%; margin-top: 5px;
-    font-family: inherit; font-size: 14px;
-  }
-  .btn-add:hover { background: #fce4ec; }
-
   .btn-enviar {
     width: 100%; margin-top: 25px;
     padding: 16px; font-size: 18px; border-radius: 30px;
@@ -197,8 +175,6 @@ import { db } from './firebase.js';
 import { collection, doc, setDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const area = document.getElementById('area-formulario');
-const params = new URLSearchParams(location.search);
-const emailPre = params.get('email') || '';
 
 area.innerHTML = `
   <div class="form" id="formBox">
@@ -211,7 +187,7 @@ area.innerHTML = `
     <input id="fCpf" placeholder="000.000.000-00" maxlength="14">
 
     <label>E-mail (opcional)</label>
-    <input id="fEmail" type="email" placeholder="seu@email.com" value="${emailPre}">
+    <input id="fEmail" type="email" placeholder="seu@email.com">
 
     <label>Fralda que vai trazer *</label>
     <select id="fFralda">
@@ -221,14 +197,7 @@ area.innerHTML = `
 
     <div style="background:#fff3e0;border-left:5px solid #ef6c00;border-radius:12px;padding:12px 15px;margin-top:15px;font-size:0.92em;">
       🎁 <strong style="color:#e65100;">Mimo obrigatório!</strong><br>
-      <span style="color:#666;">Cada convidado deve trazer <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.</span>
-    </div>
-
-    <div class="acompanhantes">
-      <label>👥 Acompanhantes (além de você)</label>
-      <p style="font-size:0.85em;color:#666;margin:5px 0;">Adicione o nome e CPF de cada pessoa que virá com você. Se vier sozinho(a), deixe em branco.</p>
-      <div id="listaAcomp"></div>
-      <button type="button" class="btn-add" id="btnAddAcomp">➕ Adicionar acompanhante</button>
+      <span style="color:#666;">Traga <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.</span>
     </div>
 
     <button class="btn-enviar" id="btnEnviar">✅ Confirmar presença</button>
@@ -248,26 +217,6 @@ function mascaraCPF(input) {
 
 mascaraCPF(document.getElementById('fCpf'));
 
-const listaAcomp = document.getElementById('listaAcomp');
-let contAcomp = 0;
-
-function adicionarAcompanhante() {
-  contAcomp++;
-  const id = contAcomp;
-  const div = document.createElement('div');
-  div.className = 'acomp-item';
-  div.id = 'acomp-' + id;
-  div.innerHTML = `
-    <input placeholder="Nome do acompanhante" class="acomp-nome" style="flex:2;">
-    <input placeholder="CPF" class="acomp-cpf" maxlength="14" style="flex:1.5;">
-    <button type="button" class="btn-remover" onclick="document.getElementById('acomp-${id}').remove()">✕</button>
-  `;
-  listaAcomp.appendChild(div);
-  mascaraCPF(div.querySelector('.acomp-cpf'));
-}
-
-document.getElementById('btnAddAcomp').addEventListener('click', adicionarAcompanhante);
-
 document.getElementById('btnEnviar').addEventListener('click', async () => {
   const btn = document.getElementById('btnEnviar');
   const erro = document.getElementById('erro');
@@ -281,19 +230,6 @@ document.getElementById('btnEnviar').addEventListener('click', async () => {
 
   if (!nome) { erro.textContent = '⚠️ Preencha seu nome'; return; }
   if (cpf.replace(/\D/g,'').length !== 11) { erro.textContent = '⚠️ CPF inválido'; return; }
-
-  const acompanhantes = [];
-  const itens = document.querySelectorAll('.acomp-item');
-  for (const item of itens) {
-    const an = item.querySelector('.acomp-nome').value.trim();
-    const ac = item.querySelector('.acomp-cpf').value.trim();
-    if (an && ac.replace(/\D/g,'').length === 11) {
-      acompanhantes.push({ nome: an, cpf: ac });
-    } else if (an || ac) {
-      erro.textContent = '⚠️ Preencha nome e CPF corretos dos acompanhantes';
-      return;
-    }
-  }
 
   btn.disabled = true;
   btn.textContent = '⏳ Enviando...';
@@ -313,8 +249,6 @@ document.getElementById('btnEnviar').addEventListener('click', async () => {
     await setDoc(doc(db, 'convidados', idDoc), {
       nome, cpf, cpfLimpo, email,
       fralda, mimo,
-      acompanhantes,
-      totalPessoas: 1 + acompanhantes.length,
       confirmado: true,
       criadoEm: new Date().toISOString()
     });
@@ -323,7 +257,7 @@ document.getElementById('btnEnviar').addEventListener('click', async () => {
       <div class="sucesso">
         <h3>🌸 Presença confirmada!</h3>
         <p>Obrigado, <strong>${nome}</strong>!</p>
-        <p>Você confirmou <strong>${1 + acompanhantes.length}</strong> pessoa(s) e vai trazer <strong>fralda ${fralda}</strong>.</p>
+        <p>Você vai trazer <strong>fralda ${fralda}</strong>.</p>
         <p>🎁 E um mimo especial — a Aurora agradece! 💕</p>
         <p style="margin-top:20px;">Nos vemos em <strong>29 de Novembro de 2026</strong>!</p>
         <p style="font-size:0.9em;color:#666;">📍 Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
