@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Admin — Chá da Aurora 🌸</title>
+<title>Chá de Bebê da Aurora 🌸</title>
 <style>
   body {
     font-family: 'Comic Sans MS', 'Quicksand', sans-serif;
@@ -16,281 +16,296 @@
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
   }
-  .container { max-width: 1050px; margin: 0 auto; }
   .card {
+    max-width: 680px; width: 100%;
     background: rgba(255,255,255,0.92);
-    border-radius: 25px; padding: 40px;
+    border-radius: 25px; padding: 45px 35px;
     box-shadow: 0 15px 50px rgba(194,24,91,0.35);
-    border: 3px dashed #f8bbd0;
+    border: 3px dashed #f8bbd0; text-align: center;
   }
-  h1 { color: #c2185b; text-shadow: 2px 2px 0 #ffe4ec; }
-  h2 { color: #7b1fa2; margin-top: 30px; }
-  .btn {
-    background: linear-gradient(135deg, #f06292, #c2185b);
-    color: white; border: none; cursor: pointer;
-    padding: 10px 20px; font-weight: bold;
+  h1 { font-size: 3em; margin: 0 0 5px; color: #c2185b; text-shadow: 2px 2px 0 #ffe4ec; }
+  h2 { font-weight: normal; margin-top: 0; font-size: 1.3em; color: #7b1fa2; }
+  .info {
+    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    padding: 18px; border-radius: 15px; margin: 25px 0;
+    border: 2px dashed #f8bbd0;
+  }
+  .estrelas { font-size: 1.5em; letter-spacing: 8px; color: #f06292; }
+
+  .regras { margin: 30px 0; text-align: left; }
+  .regras h3 { text-align: center; color: #c2185b; margin-bottom: 15px; font-size: 1.2em; }
+  .regra {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: #fff5f8; border-left: 5px solid #f8bbd0;
+    border-radius: 12px; padding: 12px 15px; margin-bottom: 10px;
+    font-size: 0.95em; line-height: 1.4;
+  }
+  .regra .icone { font-size: 1.6em; flex-shrink: 0; }
+  .regra strong { color: #c2185b; display: block; margin-bottom: 3px; }
+  .regra em { color: #666; font-style: italic; font-size: 0.92em; }
+  .regra.destaque { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-left-color: #ef6c00; }
+  .regra.destaque strong { color: #e65100; }
+  .regra.alerta { background: #ffebee; border-left-color: #e53935; }
+  .regra.alerta strong { color: #c62828; }
+
+  .mapa { margin-top: 15px; border-radius: 12px; overflow: hidden; border: 3px solid #f8bbd0; }
+  .mapa iframe { display: block; width: 100%; height: 220px; border: 0; }
+  .endereco { font-size: 0.95em; color: #555; margin-top: 10px; line-height: 1.5; }
+
+  .form {
+    background: #fff5f8; border-radius: 20px;
+    padding: 25px; margin-top: 30px; text-align: left;
+    border: 2px dashed #f8bbd0;
+  }
+  .form h3 { text-align: center; color: #c2185b; margin-top: 0; }
+  .form label { font-size: 0.9em; color: #7b1fa2; font-weight: bold; display: block; margin-top: 12px; margin-bottom: 4px; }
+  .form input, .form select {
+    width: 100%; box-sizing: border-box;
+    padding: 12px; border-radius: 12px;
+    border: 2px solid #f8bbd0; font-size: 16px;
+    font-family: inherit; background: white;
+  }
+  .form input:focus, .form select:focus { outline: none; border-color: #f06292; }
+
+  .acompanhantes { margin-top: 20px; }
+  .acomp-item {
+    display: flex; gap: 8px; align-items: center;
+    background: white; padding: 10px; border-radius: 12px;
+    margin-bottom: 8px; border: 2px solid #fce4ec;
+  }
+  .acomp-item input { margin: 0; }
+  .acomp-item .btn-remover {
+    background: #ef5350; color: white; border: none;
+    border-radius: 8px; padding: 8px 12px; cursor: pointer;
+    font-weight: bold; flex-shrink: 0;
+  }
+
+  .btn-add {
+    background: #fff; color: #c2185b;
+    border: 2px dashed #f06292; border-radius: 12px;
+    padding: 10px 15px; cursor: pointer;
+    font-weight: bold; width: 100%; margin-top: 5px;
+    font-family: inherit; font-size: 14px;
+  }
+  .btn-add:hover { background: #fce4ec; }
+
+  .btn-enviar {
+    width: 100%; margin-top: 25px;
+    padding: 16px; font-size: 18px; border-radius: 30px;
+    border: none; background: linear-gradient(135deg, #f06292, #c2185b);
+    color: white; font-weight: bold; cursor: pointer;
     box-shadow: 0 4px 12px rgba(194,24,91,0.3);
-    border-radius: 12px; font-size: 14px;
   }
-  .btn:hover { transform: translateY(-2px); }
-  .btn-verde { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
-  .btn-azul  { background: linear-gradient(135deg, #42a5f5, #1565c0); }
-  .btn-mini  { padding: 6px 12px; font-size: 13px; margin: 2px; }
-  table {
-    width: 100%; border-collapse: collapse; margin-top: 20px;
-    background: white; border-radius: 15px; overflow: hidden;
-    box-shadow: 0 4px 15px rgba(194,24,91,0.1);
+  .btn-enviar:hover { transform: translateY(-2px); }
+  .btn-enviar:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .sucesso {
+    background: #e8f5e9; border: 2px solid #66bb6a;
+    border-radius: 15px; padding: 25px; margin-top: 20px;
+    color: #2e7d32;
   }
-  th, td { padding: 10px; border-bottom: 1px solid #fce4ec; text-align: left; font-size: 13px; vertical-align: top; }
-  th { background: #fce4ec; color: #c2185b; font-size: 13px; }
-  .stats { display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
-  .stat {
-    flex: 1; min-width: 130px; padding: 20px; border-radius: 18px;
-    text-align: center; color: white; font-weight: bold;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-  }
-  .stat .num { font-size: 30px; display: block; }
-  .stat .lbl { font-size: 12px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
-  .stat.total   { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
-  .stat.pessoas { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
-  .stat.m       { background: linear-gradient(135deg, #f06292, #c2185b); }
-  .stat.g       { background: linear-gradient(135deg, #4fc3f7, #0277bd); }
-  .lista-acomp { font-size: 12px; color: #666; margin-top: 4px; }
-  .lista-acomp div { padding: 2px 0; }
-  .modal-bg {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5); z-index: 100;
-    justify-content: center; align-items: center;
-  }
-  .modal-bg.ativo { display: flex; }
-  .modal {
-    background: white; padding: 30px; border-radius: 20px;
-    max-width: 480px; width: 90%;
-    border: 3px dashed #f8bbd0;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    max-height: 90vh; overflow-y: auto;
-  }
-  .modal h3 { color: #c2185b; margin-top: 0; }
-  .modal input, .modal select { width: 100%; box-sizing: border-box; padding: 8px; border-radius: 8px; border: 2px solid #f8bbd0; margin: 4px 0; font-family: inherit; }
-  .modal-botoes { display: flex; gap: 10px; margin-top: 15px; }
-  .acomp-edit { display: flex; gap: 6px; margin-bottom: 6px; }
+  .sucesso h3 { color: #2e7d32; margin-top: 0; }
+  .erro-msg { color: #c62828; font-weight: bold; margin-top: 10px; }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="card">
-    <h1>🌸 Painel Admin — Chá da Aurora</h1>
-    <p style="color:#7b1fa2;">📤 Compartilhe este link com todos os convidados: 
-      <input id="linkCompartilhavel" readonly style="width:60%;padding:8px;border-radius:8px;border:2px solid #f8bbd0;font-size:13px;">
-      <button class="btn btn-mini btn-verde" onclick="copiarLink()">📋 Copiar</button>
-    </p>
+<div class="card">
+  <div class="estrelas">✦ ✧ ✦ ✧ ✦</div>
+  <h1>Aurora 🌟</h1>
+  <h2>Chá de Bebê</h2>
+  <p><strong>Moises & Beatriz</strong> convidam você para celebrar<br>a chegada da nossa pequena Aurora.</p>
 
-    <h2>📊 Relatório geral</h2>
-    <div class="stats">
-      <div class="stat total"><span class="num" id="statTotal">0</span><span class="lbl">Confirmações</span></div>
-      <div class="stat pessoas"><span class="num" id="statPessoas">0</span><span class="lbl">Pessoas total</span></div>
-      <div class="stat m"><span class="num" id="statM">0</span><span class="lbl">Fralda M</span></div>
-      <div class="stat g"><span class="num" id="statG">0</span><span class="lbl">Fralda G</span></div>
+  <div class="info">
+    <p>📅 <strong>29 de Novembro de 2026</strong></p>
+    <p>🕐 Horário: (a confirmar)</p>
+    <div class="endereco">
+      📍 <strong>Estrada do Pium, 4145</strong><br>
+      Mogi das Cruzes — SP<br>
+      CEP 08774-320
     </div>
-
-    <h2>🎀 Lista de confirmados</h2>
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:10px;">
-      <input id="busca" placeholder="🔍 Buscar por nome..." style="padding:10px;border-radius:12px;border:2px solid #f8bbd0;width:300px;font-family:inherit;">
-      <button class="btn btn-azul" onclick="imprimirRelatorio()">🖨️ Imprimir relatório</button>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th><th>Fralda</th><th>Pessoas</th><th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="lista"></tbody>
-    </table>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal">
-  <div class="modal">
-    <h3>✏️ Editar convidado</h3>
-    <input id="editId" type="hidden">
-    <label style="font-size:0.85em;color:#7b1fa2;">Nome</label>
-    <input id="editNome">
-    <label style="font-size:0.85em;color:#7b1fa2;">Fralda</label>
-    <select id="editFralda"><option value="M">M</option><option value="G">G</option></select>
-    <label style="font-size:0.85em;color:#7b1fa2;margin-top:10px;display:block;">Família / Acompanhantes</label>
-    <div id="editAcomp"></div>
-    <button type="button" class="btn btn-mini btn-azul" onclick="addAcompEdit()">➕ Adicionar</button>
-    <div class="modal-botoes">
-      <button class="btn btn-verde" onclick="salvarEdicao()">💾 Salvar</button>
-      <button class="btn" onclick="fecharModal()" style="background:#999;">Cancelar</button>
+    <div class="mapa">
+      <iframe src="https://www.google.com/maps?q=Estrada+do+Pium+4145+Mogi+das+Cruzes+SP+08774-320&output=embed" loading="lazy"></iframe>
     </div>
   </div>
+
+  <div class="regras">
+    <h3>📋 Regras do Chá</h3>
+
+    <div class="regra">
+      <span class="icone">👗</span>
+      <div>
+        <strong>Vestimenta adequada</strong>
+        Pedimos a gentileza de virem com trajes apropriados para uma celebração em família.
+        <em>Não será permitido shorts curtos, saias curtas, roupas muito decotadas ou peças de praia.</em>
+      </div>
+    </div>
+
+    <div class="regra">
+      <span class="icone">👶</span>
+      <div>
+        <strong>Fraldas — somente tamanhos M ou G</strong>
+        Para evitar desperdício, aceitaremos <strong>apenas fraldas tamanho M ou G</strong>.
+      </div>
+    </div>
+
+    <div class="regra destaque">
+      <span class="icone">💬</span>
+      <div>
+        <strong>Recado do papai Moises:</strong>
+        <em>"Só entra se trazer fraldas destes tamanhos solicitados!"</em>
+      </div>
+    </div>
+
+    <div class="regra">
+      <span class="icone">🥤</span>
+      <div>
+        <strong>Bebidas</strong>
+        Cada convidado deve <strong>trazer sua própria bebida para consumo</strong>.
+        <em>Não vamos admitir discussões ou brigas por causa de bebida.</em>
+      </div>
+    </div>
+
+    <div class="regra">
+      <span class="icone">🎁</span>
+      <div>
+        <strong>Mimo obrigatório</strong>
+        Cada convidado deve trazer <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.
+      </div>
+    </div>
+
+    <div class="regra alerta">
+      <span class="icone">🚫</span>
+      <div>
+        <strong>Proibido</strong>
+        Cigarros eletrônicos (vape), narguilé e quaisquer outros cigarros ilícitos.
+        <em>Ambiente 100% livre desses itens — é uma festa para a Aurora.</em>
+      </div>
+    </div>
+
+    <div class="regra alerta">
+      <span class="icone">🔊</span>
+      <div>
+        <strong>Proibido caixa de som</strong>
+        Não será permitido trazer caixas de som ou equipamentos para música no local.
+        <em>A música do chá será organizada pelos anfitriões.</em>
+      </div>
+    </div>
+  </div>
+
+  <div id="area-formulario"></div>
+
+  <div class="estrelas" style="margin-top:25px;">✦ ✧ ✦ ✧ ✦</div>
 </div>
 
 <script type="module">
 import { db } from './firebase.js';
-import { collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const linkCompartilhavel = location.origin + location.pathname.replace('admin.html', 'index.html');
-document.getElementById('linkCompartilhavel').value = linkCompartilhavel;
+const area = document.getElementById('area-formulario');
 
-window.copiarLink = function() {
-  navigator.clipboard.writeText(linkCompartilhavel);
-  alert('Link copiado! ✅\n\nEnvie para todos os convidados.');
-};
+area.innerHTML = `
+  <div class="form" id="formBox">
+    <h3>✨ Confirme sua presença ✨</h3>
 
-let convidados = [];
-onSnapshot(collection(db, 'convidados'), (snap) => {
-  convidados = [];
-  snap.forEach(d => convidados.push({ id: d.id, ...d.data() }));
-  atualizarStats();
-  renderLista();
-});
+    <label>Seu nome completo *</label>
+    <input id="fNome" placeholder="Digite seu nome">
 
-document.getElementById('busca').addEventListener('input', renderLista);
+    <label>Fralda que vai trazer *</label>
+    <select id="fFralda">
+      <option value="M" selected>Fralda M</option>
+      <option value="G">Fralda G</option>
+    </select>
 
-function atualizarStats() {
-  document.getElementById('statTotal').textContent = convidados.length;
-  const totalPessoas = convidados.reduce((s, c) => s + (c.totalPessoas || 1), 0);
-  document.getElementById('statPessoas').textContent = totalPessoas;
-  document.getElementById('statM').textContent = convidados.filter(c => c.fralda === 'M').length;
-  document.getElementById('statG').textContent = convidados.filter(c => c.fralda === 'G').length;
-}
-
-function renderLista() {
-  const busca = document.getElementById('busca').value.toLowerCase();
-  const lista = document.getElementById('lista');
-  lista.innerHTML = '';
-
-  let filtrados = convidados;
-  if (busca) {
-    filtrados = convidados.filter(c => (c.nome || '').toLowerCase().includes(busca));
-  }
-
-  if (filtrados.length === 0) {
-    lista.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:30px;">Nenhum convidado aqui ainda 🌸</td></tr>';
-    return;
-  }
-
-  filtrados.forEach(c => {
-    const acomps = (c.acompanhantes || []).map(a => `<div>• ${a.nome}</div>`).join('');
-    lista.innerHTML += '<tr>' +
-      '<td><strong>'+c.nome+'</strong>'+(acomps?'<div class="lista-acomp">'+acomps+'</div>':'')+'</td>' +
-      '<td><strong>'+c.fralda+'</strong></td>' +
-      '<td><strong>'+(c.totalPessoas||1)+'</strong></td>' +
-      '<td>' +
-        '<button class="btn btn-mini btn-verde" onclick="editar(\''+c.id+'\')">✏️</button> ' +
-        '<button class="btn btn-mini" onclick="excluir(\''+c.id+'\',\''+c.nome.replace(/'/g,"")+'\')" style="background:linear-gradient(135deg,#ef5350,#c62828)">🗑️</button>' +
-      '</td>' +
-      '</tr>';
-  });
-}
-
-window.editar = function(id) {
-  const c = convidados.find(x => x.id === id);
-  if (!c) return;
-  document.getElementById('editId').value = id;
-  document.getElementById('editNome').value = c.nome || '';
-  document.getElementById('editFralda').value = c.fralda || 'M';
-
-  const container = document.getElementById('editAcomp');
-  container.innerHTML = '';
-  (c.acompanhantes || []).forEach(a => addAcompEdit(a.nome));
-
-  document.getElementById('modal').classList.add('ativo');
-};
-
-window.addAcompEdit = function(nome = '') {
-  const container = document.getElementById('editAcomp');
-  const div = document.createElement('div');
-  div.className = 'acomp-edit';
-  div.innerHTML = `
-    <input placeholder="Nome do familiar" value="${nome}" style="flex:1;">
-    <button type="button" class="btn btn-mini" onclick="this.parentElement.remove()" style="background:#ef5350;">✕</button>
-  `;
-  container.appendChild(div);
-};
-
-window.fecharModal = function() {
-  document.getElementById('modal').classList.remove('ativo');
-};
-
-window.salvarEdicao = async function() {
-  const id = document.getElementById('editId').value;
-  const nome = document.getElementById('editNome').value.trim();
-  const fralda = document.getElementById('editFralda').value;
-  const original = convidados.find(x => x.id === id);
-
-  const acompanhantes = [];
-  document.querySelectorAll('#editAcomp .acomp-edit').forEach(div => {
-    const n = div.querySelector('input').value.trim();
-    if (n) acompanhantes.push({ nome: n });
-  });
-
-  await setDoc(doc(db, 'convidados', id), {
-    ...original,
-    nome, fralda,
-    acompanhantes,
-    totalPessoas: 1 + acompanhantes.length
-  });
-  fecharModal();
-};
-
-window.excluir = async function(id, nome) {
-  if (!confirm('Excluir "' + nome + '"? Essa ação não pode ser desfeita.')) return;
-  await deleteDoc(doc(db, 'convidados', id));
-};
-
-window.imprimirRelatorio = function() {
-  const totalPessoas = convidados.reduce((s,c) => s + (c.totalPessoas||1), 0);
-
-  let html = `
-    <html><head><meta charset="UTF-8"><title>Relatório — Chá da Aurora</title>
-    <style>
-      body { font-family: Arial, sans-serif; padding: 25px; color: #333; }
-      h1 { color: #c2185b; border-bottom: 3px solid #c2185b; padding-bottom: 8px; }
-      h2 { color: #7b1fa2; margin-top: 25px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
-      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-      th, td { border: 1px solid #ccc; padding: 6px; text-align: left; font-size: 12px; }
-      th { background: #fce4ec; color: #c2185b; }
-      .resumo { background: #f5f5f5; padding: 12px; border-radius: 8px; margin: 15px 0; }
-      .resumo span { display: inline-block; margin-right: 20px; font-size: 14px; }
-      .rodape { margin-top: 30px; font-size: 10px; color: #999; text-align: center; }
-      .acomp { font-size: 10px; color: #666; }
-      @media print { body { padding: 10px; } }
-    </style></head><body>
-    <h1>🌸 Relatório — Chá de Bebê da Aurora</h1>
-    <p><strong>Data:</strong> 29 de Novembro de 2026 &nbsp;|&nbsp;
-    <strong>Local:</strong> Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
-    <p><strong>Gerado em:</strong> ${new Date().toLocaleString('pt-BR')}</p>
-
-    <div class="resumo">
-      <span>👥 <strong>Confirmações:</strong> ${convidados.length}</span>
-      <span>🧑‍🤝‍🧑 <strong>Pessoas total:</strong> ${totalPessoas}</span>
-      <span>👶 <strong>Fraldas M:</strong> ${convidados.filter(c=>c.fralda==='M').length}</span>
-      <span>👶 <strong>Fraldas G:</strong> ${convidados.filter(c=>c.fralda==='G').length}</span>
+    <div style="background:#fff3e0;border-left:5px solid #ef6c00;border-radius:12px;padding:12px 15px;margin-top:15px;font-size:0.92em;">
+      🎁 <strong style="color:#e65100;">Mimo obrigatório!</strong><br>
+      <span style="color:#666;">Traga <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.</span>
     </div>
 
-    <h2>Lista de confirmados</h2>
-    <table>
-      <tr><th>#</th><th>Nome</th><th>Fralda</th><th>Pessoas</th></tr>
-      ${convidados.length ? convidados.map((c,i) => {
-        const acomps = (c.acompanhantes||[]).map(a => `<div class="acomp">↳ ${a.nome}</div>`).join('');
-        return `<tr><td>${i+1}</td><td>${c.nome}${acomps}</td><td>${c.fralda}</td><td>${c.totalPessoas||1}</td></tr>`;
-      }).join('') : '<tr><td colspan="4" style="text-align:center;">Nenhum confirmado ainda</td></tr>'}
-    </table>
+    <div class="acompanhantes">
+      <label>👥 Família / Acompanhantes</label>
+      <p style="font-size:0.85em;color:#666;margin:5px 0;">Adicione o nome de cada pessoa da sua família que virá com você. Se vier sozinho(a), deixe em branco.</p>
+      <div id="listaAcomp"></div>
+      <button type="button" class="btn-add" id="btnAddAcomp">➕ Adicionar familiar</button>
+    </div>
 
-    <div class="rodape">Relatório gerado pelo painel admin — Chá da Aurora 🌟</div>
-    </body></html>
+    <button class="btn-enviar" id="btnEnviar">✅ Confirmar presença</button>
+    <p class="erro-msg" id="erro"></p>
+  </div>
+`;
+
+const listaAcomp = document.getElementById('listaAcomp');
+let contAcomp = 0;
+
+function adicionarAcompanhante() {
+  contAcomp++;
+  const id = contAcomp;
+  const div = document.createElement('div');
+  div.className = 'acomp-item';
+  div.id = 'acomp-' + id;
+  div.innerHTML = `
+    <input placeholder="Nome do familiar" class="acomp-nome" style="flex:1;">
+    <button type="button" class="btn-remover" onclick="document.getElementById('acomp-${id}').remove()">✕</button>
   `;
+  listaAcomp.appendChild(div);
+}
 
-  const win = window.open('', '_blank');
-  win.document.write(html);
-  win.document.close();
-  setTimeout(() => win.print(), 500);
-};
+document.getElementById('btnAddAcomp').addEventListener('click', adicionarAcompanhante);
+
+document.getElementById('btnEnviar').addEventListener('click', async () => {
+  const btn = document.getElementById('btnEnviar');
+  const erro = document.getElementById('erro');
+  erro.textContent = '';
+
+  const nome = document.getElementById('fNome').value.trim();
+  const fralda = document.getElementById('fFralda').value;
+  const mimo = 'sim';
+
+  if (!nome) { erro.textContent = '⚠️ Preencha seu nome'; return; }
+
+  const acompanhantes = [];
+  const itens = document.querySelectorAll('.acomp-item');
+  for (const item of itens) {
+    const an = item.querySelector('.acomp-nome').value.trim();
+    if (an) acompanhantes.push({ nome: an });
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando...';
+
+  try {
+    // ID único baseado em timestamp + nome para evitar duplicatas
+    const idDoc = Date.now().toString() + '-' + nome.toLowerCase().replace(/\s+/g,'-').slice(0,20);
+
+    await setDoc(doc(db, 'convidados', idDoc), {
+      nome,
+      fralda, mimo,
+      acompanhantes,
+      totalPessoas: 1 + acompanhantes.length,
+      confirmado: true,
+      criadoEm: new Date().toISOString()
+    });
+
+    area.innerHTML = `
+      <div class="sucesso">
+        <h3>🌸 Presença confirmada!</h3>
+        <p>Obrigado, <strong>${nome}</strong>!</p>
+        <p>Você confirmou <strong>${1 + acompanhantes.length}</strong> pessoa(s) e vai trazer <strong>fralda ${fralda}</strong>.</p>
+        <p>🎁 E um mimo especial — a Aurora agradece! 💕</p>
+        <p style="margin-top:20px;">Nos vemos em <strong>29 de Novembro de 2026</strong>!</p>
+        <p style="font-size:0.9em;color:#666;">📍 Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
+      </div>
+    `;
+  } catch (e) {
+    console.error(e);
+    erro.textContent = '❌ Erro ao enviar: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '✅ Confirmar presença';
+  }
+});
 </script>
 </body>
 </html>
