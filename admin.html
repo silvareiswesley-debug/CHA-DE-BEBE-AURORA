@@ -2,90 +2,188 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#7b1fa2">
 <title>Admin — Chá da Aurora 🌸</title>
 <style>
-  html, body { margin: 0; padding: 0; min-height: 100vh; }
-  body {
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin:0; padding:0; min-height:100vh; width:100%;
     font-family: 'Comic Sans MS', 'Quicksand', sans-serif;
-    padding: 30px 15px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-size: 16px;
+  }
+  body {
+    padding: 20px 12px;
     background-image: url('fundo.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    touch-action: manipulation;
+    overscroll-behavior: none;
   }
   .container { max-width: 1050px; margin: 0 auto; }
   .card {
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border-radius: 25px; padding: 40px;
+    border-radius: 22px;
+    padding: 26px 20px;
     box-shadow: 0 15px 50px rgba(90, 40, 120, 0.45);
     border: 3px solid rgba(255, 255, 255, 0.6);
     position: relative;
     z-index: 1;
   }
-  h1 { color: #6a1b9a; text-shadow: 2px 2px 0 #fff, 0 0 15px rgba(255,255,255,0.9); }
-  h2 { color: #7b1fa2; margin-top: 30px; text-shadow: 1px 1px 0 #fff; }
+  h1 {
+    color: #6a1b9a;
+    text-shadow: 2px 2px 0 #fff, 0 0 15px rgba(255,255,255,0.9);
+    font-size: 1.5em;
+    margin-top: 0;
+  }
+  h2 { color: #7b1fa2; margin-top: 26px; text-shadow: 1px 1px 0 #fff; font-size: 1.12em; }
   .btn {
     background: linear-gradient(135deg, #f06292, #c2185b);
     color: white; border: none; cursor: pointer;
-    padding: 10px 20px; font-weight: bold;
+    padding: 12px 18px; font-weight: bold;
     box-shadow: 0 4px 12px rgba(194,24,91,0.3);
-    border-radius: 12px; font-size: 14px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    min-height: 44px;
+    font-family: inherit;
+    touch-action: manipulation;
   }
-  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: scale(0.97); }
   .btn-verde { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
   .btn-azul  { background: linear-gradient(135deg, #42a5f5, #1565c0); }
-  .btn-mini  { padding: 6px 12px; font-size: 13px; margin: 2px; }
-  table {
-    width: 100%; border-collapse: collapse; margin-top: 20px;
-    background: rgba(255,255,255,0.95); border-radius: 15px; overflow: hidden;
+  .btn-mini  { padding: 8px 12px; font-size: 0.85em; margin: 2px; min-height: 40px; }
+
+  .tabela-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 15px;
+    margin-top: 15px;
     box-shadow: 0 4px 15px rgba(194,24,91,0.15);
   }
-  th, td { padding: 10px; border-bottom: 1px solid #fce4ec; text-align: left; font-size: 13px; vertical-align: top; }
-  th { background: rgba(252, 228, 236, 0.9); color: #c2185b; font-size: 13px; }
-  .stats { display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.95);
+    min-width: 500px;
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #fce4ec;
+    text-align: left;
+    font-size: 0.85em;
+    vertical-align: top;
+  }
+  th { background: rgba(252, 228, 236, 0.9); color: #c2185b; font-size: 0.82em; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 18px 0;
+  }
   .stat {
-    flex: 1; min-width: 130px; padding: 20px; border-radius: 18px;
+    padding: 16px 10px; border-radius: 16px;
     text-align: center; color: white; font-weight: bold;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
   }
-  .stat .num { font-size: 30px; display: block; }
-  .stat .lbl { font-size: 12px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
+  .stat .num { font-size: 26px; display: block; }
+  .stat .lbl { font-size: 10px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
   .stat.total   { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
   .stat.pessoas { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
   .stat.m       { background: linear-gradient(135deg, #f06292, #c2185b); }
   .stat.g       { background: linear-gradient(135deg, #4fc3f7, #0277bd); }
-  .lista-acomp { font-size: 12px; color: #666; margin-top: 4px; }
+
+  .lista-acomp { font-size: 0.85em; color: #666; margin-top: 4px; }
   .lista-acomp div { padding: 2px 0; }
+  .badge-recusou {
+    background: #ef5350; color: white;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 0.7em; margin-left: 6px;
+    font-weight: bold;
+    display: inline-block;
+  }
+
   .modal-bg {
     display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5); z-index: 100;
+    background: rgba(0,0,0,0.6); z-index: 100;
     justify-content: center; align-items: center;
+    padding: 15px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .modal-bg.ativo { display: flex; }
   .modal {
-    background: white; padding: 30px; border-radius: 20px;
-    max-width: 480px; width: 90%;
+    background: white; padding: 25px; border-radius: 20px;
+    max-width: 480px; width: 100%;
     border: 3px dashed #f8bbd0;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     max-height: 90vh; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .modal h3 { color: #c2185b; margin-top: 0; }
-  .modal input, .modal select { width: 100%; box-sizing: border-box; padding: 8px; border-radius: 8px; border: 2px solid #f8bbd0; margin: 4px 0; font-family: inherit; }
-  .modal-botoes { display: flex; gap: 10px; margin-top: 15px; }
+  .modal h3 { color: #c2185b; margin-top: 0; font-size: 1.15em; }
+  .modal input, .modal select {
+    width: 100%; padding: 12px;
+    border-radius: 10px; border: 2px solid #f8bbd0;
+    margin: 4px 0;
+    font-family: inherit;
+    font-size: 16px !important;
+    min-height: 46px;
+  }
+  .modal-botoes { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+  .modal-botoes .btn { flex: 1; min-width: 120px; }
   .acomp-edit { display: flex; gap: 6px; margin-bottom: 6px; }
+  .acomp-edit input { flex: 1; }
+  .acomp-edit .btn { min-height: 46px; padding: 8px 14px; }
+
+  .link-compartilhavel {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid #f8bbd0;
+    font-size: 14px;
+    margin: 8px 0;
+    font-family: inherit;
+    background: white;
+    color: #555;
+  }
+
+  @media (min-width: 700px) {
+    .stats { grid-template-columns: repeat(4, 1fr); }
+    .stat .num { font-size: 30px; }
+    th, td { font-size: 13px; padding: 12px; }
+    h1 { font-size: 1.7em; }
+    h2 { font-size: 1.18em; }
+    table { min-width: auto; }
+  }
+  @media (min-width: 900px) {
+    body { padding: 30px 15px; }
+    .card { padding: 40px; border-radius: 25px; }
+  }
+  @media (max-width: 400px) {
+    .card { padding: 20px 14px; }
+    h1 { font-size: 1.3em; }
+    h2 { font-size: 1.02em; }
+    .stat { padding: 14px 8px; }
+    .stat .num { font-size: 22px; }
+    .stat .lbl { font-size: 9px; }
+    .btn-mini { padding: 6px 10px; font-size: 0.8em; min-height: 36px; }
+    .modal { padding: 20px 16px; }
+  }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="card">
     <h1>🌸 Painel Admin — Chá da Aurora</h1>
-    <p style="color:#7b1fa2;">📤 Compartilhe este link com todos os convidados: 
-      <input id="linkCompartilhavel" readonly style="width:60%;padding:8px;border-radius:8px;border:2px solid #f8bbd0;font-size:13px;">
-      <button class="btn btn-mini btn-verde" onclick="copiarLink()">📋 Copiar</button>
-    </p>
+    <p style="color:#7b1fa2;font-size:0.92em;margin-top:10px;">📤 Compartilhe este link com todos os convidados:</p>
+    <input id="linkCompartilhavel" class="link-compartilhavel" readonly>
+    <button class="btn btn-verde" id="btnCopiar">📋 Copiar link</button>
 
     <h2>📊 Relatório geral</h2>
     <div class="stats">
@@ -96,19 +194,31 @@
     </div>
 
     <h2>🎀 Lista de confirmados</h2>
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:10px;">
-      <input id="busca" placeholder="🔍 Buscar por nome..." style="padding:10px;border-radius:12px;border:2px solid #f8bbd0;width:300px;font-family:inherit;">
-      <button class="btn btn-azul" onclick="imprimirRelatorio()">🖨️ Imprimir relatório</button>
+    <input id="busca" placeholder="🔍 Buscar por nome..." style="width:100%;padding:12px;border-radius:12px;border:2px solid #f8bbd0;font-family:inherit;font-size:16px;margin-top:10px;">
+    <div style="margin-top:10px;">
+      <button class="btn btn-azul" id="btnImprimir" style="width:100%;">🖨️ Imprimir relatório completo</button>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th><th>Fralda</th><th>Pessoas</th><th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="lista"></tbody>
-    </table>
+    <div class="tabela-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th><th>Fralda</th><th>Pessoas</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="lista"></tbody>
+      </table>
+    </div>
+
+    <h2>💔 Não vão poder vir</h2>
+    <div class="tabela-wrapper">
+      <table>
+        <thead>
+          <tr><th>Nome</th><th>Data</th></tr>
+        </thead>
+        <tbody id="listaRecusaram"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -122,10 +232,10 @@
     <select id="editFralda"><option value="M">M</option><option value="G">G</option></select>
     <label style="font-size:0.85em;color:#7b1fa2;margin-top:10px;display:block;">Família / Acompanhantes</label>
     <div id="editAcomp"></div>
-    <button type="button" class="btn btn-mini btn-azul" onclick="addAcompEdit()">➕ Adicionar</button>
+    <button type="button" class="btn btn-mini btn-azul" id="btnAddAcompEdit">➕ Adicionar</button>
     <div class="modal-botoes">
-      <button class="btn btn-verde" onclick="salvarEdicao()">💾 Salvar</button>
-      <button class="btn" onclick="fecharModal()" style="background:#999;">Cancelar</button>
+      <button class="btn btn-verde" id="btnSalvar">💾 Salvar</button>
+      <button class="btn" id="btnCancelar" style="background:#999;">Cancelar</button>
     </div>
   </div>
 </div>
@@ -134,174 +244,275 @@
 import { db } from './firebase.js';
 import { collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const linkCompartilhavel = location.origin + location.pathname.replace('admin.html', 'index.html');
+var linkCompartilhavel = location.origin + location.pathname.replace('admin.html', 'index.html');
 document.getElementById('linkCompartilhavel').value = linkCompartilhavel;
 
-window.copiarLink = function() {
-  navigator.clipboard.writeText(linkCompartilhavel);
-  alert('Link copiado! ✅\n\nEnvie para todos os convidados.');
-};
+document.getElementById('btnCopiar').addEventListener('click', function() {
+  var input = document.getElementById('linkCompartilhavel');
+  input.select();
+  input.setSelectionRange(0, 99999);
+  try {
+    navigator.clipboard.writeText(linkCompartilhavel);
+    alert('Link copiado! ✅');
+  } catch (e) {
+    document.execCommand('copy');
+    alert('Link copiado! ✅');
+  }
+});
 
-let convidados = [];
-onSnapshot(collection(db, 'convidados'), (snap) => {
+var convidados = [];
+
+onSnapshot(collection(db, 'convidados'), function(snap) {
   convidados = [];
-  snap.forEach(d => convidados.push({ id: d.id, ...d.data() }));
+  snap.forEach(function(d) {
+    var obj = d.data();
+    obj.id = d.id;
+    convidados.push(obj);
+  });
   atualizarStats();
   renderLista();
+  renderRecusaram();
 });
 
 document.getElementById('busca').addEventListener('input', renderLista);
 
 function atualizarStats() {
-  document.getElementById('statTotal').textContent = convidados.length;
-  const totalPessoas = convidados.reduce((s, c) => {
-    const acomps = Array.isArray(c.acompanhantes) ? c.acompanhantes.length : 0;
-    const t = c.totalPessoas || (1 + acomps);
-    return s + t;
+  var confirmados = convidados.filter(function(c) { return c.confirmado !== false; });
+  document.getElementById('statTotal').textContent = confirmados.length;
+
+  var totalPessoas = confirmados.reduce(function(s, c) {
+    var acomps = Array.isArray(c.acompanhantes) ? c.acompanhantes.length : 0;
+    return s + (c.totalPessoas || (1 + acomps));
   }, 0);
+
   document.getElementById('statPessoas').textContent = totalPessoas;
-  document.getElementById('statM').textContent = convidados.filter(c => c.fralda === 'M').length;
-  document.getElementById('statG').textContent = convidados.filter(c => c.fralda === 'G').length;
+  document.getElementById('statM').textContent = confirmados.filter(function(c) { return c.fralda === 'M'; }).length;
+  document.getElementById('statG').textContent = confirmados.filter(function(c) { return c.fralda === 'G'; }).length;
 }
 
 function renderLista() {
-  const busca = document.getElementById('busca').value.toLowerCase();
-  const lista = document.getElementById('lista');
+  var busca = document.getElementById('busca').value.toLowerCase();
+  var lista = document.getElementById('lista');
   lista.innerHTML = '';
 
-  let filtrados = convidados;
+  var filtrados = convidados.filter(function(c) { return c.confirmado !== false; });
   if (busca) {
-    filtrados = convidados.filter(c => (c.nome || '').toLowerCase().includes(busca));
+    filtrados = filtrados.filter(function(c) {
+      return (c.nome || '').toLowerCase().indexOf(busca) !== -1;
+    });
   }
 
   if (filtrados.length === 0) {
-    lista.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:30px;">Nenhum convidado aqui ainda 🌸</td></tr>';
+    lista.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:30px;">Nenhum convidado confirmado ainda 🌸</td></tr>';
     return;
   }
 
-  filtrados.forEach(c => {
-    const acomps = (c.acompanhantes || []).map(a => `<div>↳ ${a.nome}</div>`).join('');
-    const totalP = c.totalPessoas || (1 + (c.acompanhantes?.length || 0));
+  filtrados.forEach(function(c) {
+    var acomps = '';
+    if (c.acompanhantes && c.acompanhantes.length) {
+      acomps = c.acompanhantes.map(function(a) {
+        return '<div>↳ ' + a.nome + '</div>';
+      }).join('');
+    }
+    var totalP = c.totalPessoas || (1 + ((c.acompanhantes || []).length));
+    var nomeLimpo = (c.nome || '').replace(/'/g, '');
 
     lista.innerHTML += '<tr>' +
-      '<td><strong>'+c.nome+'</strong>'+(acomps?'<div class="lista-acomp">'+acomps+'</div>':'')+'</td>' +
-      '<td><strong>'+c.fralda+'</strong></td>' +
-      '<td><strong>'+totalP+'</strong></td>' +
+      '<td><strong>' + c.nome + '</strong>' + (acomps ? '<div class="lista-acomp">' + acomps + '</div>' : '') + '</td>' +
+      '<td><strong>' + c.fralda + '</strong></td>' +
+      '<td><strong>' + totalP + '</strong></td>' +
       '<td>' +
-        '<button class="btn btn-mini btn-verde" onclick="editar(\''+c.id+'\')">✏️</button> ' +
-        '<button class="btn btn-mini" onclick="excluir(\''+c.id+'\',\''+c.nome.replace(/'/g,"")+'\')" style="background:linear-gradient(135deg,#ef5350,#c62828)">🗑️</button>' +
+        '<button class="btn btn-mini btn-verde btn-editar" data-id="' + c.id + '">✏️</button> ' +
+        '<button class="btn btn-mini btn-excluir" data-id="' + c.id + '" data-nome="' + nomeLimpo + '" style="background:linear-gradient(135deg,#ef5350,#c62828)">🗑️</button>' +
       '</td>' +
       '</tr>';
   });
+
+  document.querySelectorAll('.btn-editar').forEach(function(b) {
+    b.addEventListener('click', function() { abrirEdicao(this.getAttribute('data-id')); });
+  });
+  document.querySelectorAll('.btn-excluir').forEach(function(b) {
+    b.addEventListener('click', function() {
+      excluir(this.getAttribute('data-id'), this.getAttribute('data-nome'));
+    });
+  });
 }
 
-window.editar = function(id) {
-  const c = convidados.find(x => x.id === id);
+function renderRecusaram() {
+  var recusaram = convidados.filter(function(c) { return c.confirmado === false; });
+  var tb = document.getElementById('listaRecusaram');
+
+  if (recusaram.length === 0) {
+    tb.innerHTML = '<tr><td colspan="2" style="text-align:center;color:#999;padding:20px;">Ninguém recusou ainda 🌸</td></tr>';
+    return;
+  }
+
+  var html = '';
+  recusaram.forEach(function(c) {
+    var data = c.criadoEm ? new Date(c.criadoEm).toLocaleString('pt-BR') : '—';
+    html += '<tr>' +
+      '<td>' + c.nome + ' <span class="badge-recusou">NÃO VAI</span></td>' +
+      '<td style="font-size:0.85em;color:#888;">' + data + '</td>' +
+      '</tr>';
+  });
+  tb.innerHTML = html;
+}
+
+function abrirEdicao(id) {
+  var c = null;
+  for (var i = 0; i < convidados.length; i++) {
+    if (convidados[i].id === id) { c = convidados[i]; break; }
+  }
   if (!c) return;
+
   document.getElementById('editId').value = id;
   document.getElementById('editNome').value = c.nome || '';
   document.getElementById('editFralda').value = c.fralda || 'M';
 
-  const container = document.getElementById('editAcomp');
+  var container = document.getElementById('editAcomp');
   container.innerHTML = '';
-  (c.acompanhantes || []).forEach(a => addAcompEdit(a.nome));
+  (c.acompanhantes || []).forEach(function(a) { addAcompEdit(a.nome); });
 
   document.getElementById('modal').classList.add('ativo');
-};
+}
 
-window.addAcompEdit = function(nome = '') {
-  const container = document.getElementById('editAcomp');
-  const div = document.createElement('div');
+function addAcompEdit(nome) {
+  nome = nome || '';
+  var container = document.getElementById('editAcomp');
+  var div = document.createElement('div');
   div.className = 'acomp-edit';
-  div.innerHTML = `
-    <input placeholder="Nome do familiar" value="${nome}" style="flex:1;">
-    <button type="button" class="btn btn-mini" onclick="this.parentElement.remove()" style="background:#ef5350;">✕</button>
-  `;
+  div.innerHTML = '<input placeholder="Nome do familiar" value="' + nome + '">' +
+    '<button type="button" class="btn btn-mini btn-remover-acomp" style="background:#ef5350;">✕</button>';
+  div.querySelector('.btn-remover-acomp').addEventListener('click', function() { div.remove(); });
   container.appendChild(div);
-};
+}
 
-window.fecharModal = function() {
+function fecharModal() {
   document.getElementById('modal').classList.remove('ativo');
-};
+}
 
-window.salvarEdicao = async function() {
-  const id = document.getElementById('editId').value;
-  const nome = document.getElementById('editNome').value.trim();
-  const fralda = document.getElementById('editFralda').value;
-  const original = convidados.find(x => x.id === id);
+async function salvarEdicao() {
+  var id = document.getElementById('editId').value;
+  var nome = document.getElementById('editNome').value.trim();
+  var fralda = document.getElementById('editFralda').value;
 
-  const acompanhantes = [];
-  document.querySelectorAll('#editAcomp .acomp-edit').forEach(div => {
-    const n = div.querySelector('input').value.trim();
+  var original = null;
+  for (var i = 0; i < convidados.length; i++) {
+    if (convidados[i].id === id) { original = convidados[i]; break; }
+  }
+
+  var acompanhantes = [];
+  document.querySelectorAll('#editAcomp .acomp-edit').forEach(function(div) {
+    var n = div.querySelector('input').value.trim();
     if (n) acompanhantes.push({ nome: n });
   });
 
-  await setDoc(doc(db, 'convidados', id), {
-    ...original,
-    nome, fralda,
-    acompanhantes,
+  var dadosFinais = Object.assign({}, original, {
+    nome: nome,
+    fralda: fralda,
+    acompanhantes: acompanhantes,
     totalPessoas: 1 + acompanhantes.length
   });
-  fecharModal();
-};
 
-window.excluir = async function(id, nome) {
+  await setDoc(doc(db, 'convidados', id), dadosFinais);
+  fecharModal();
+}
+
+async function excluir(id, nome) {
   if (!confirm('Excluir "' + nome + '"? Essa ação não pode ser desfeita.')) return;
   await deleteDoc(doc(db, 'convidados', id));
-};
+}
 
-window.imprimirRelatorio = function() {
-  const totalPessoas = convidados.reduce((s,c) => {
-    const acomps = Array.isArray(c.acompanhantes) ? c.acompanhantes.length : 0;
+document.getElementById('btnAddAcompEdit').addEventListener('click', function() { addAcompEdit(''); });
+document.getElementById('btnSalvar').addEventListener('click', salvarEdicao);
+document.getElementById('btnCancelar').addEventListener('click', fecharModal);
+
+function imprimirRelatorio() {
+  var confirmados = convidados.filter(function(c) { return c.confirmado !== false; });
+  var recusaram = convidados.filter(function(c) { return c.confirmado === false; });
+
+  var linhasConf = '';
+  if (confirmados.length === 0) {
+    linhasConf = '<tr><td colspan="4" style="text-align:center;">Nenhum confirmado ainda</td></tr>';
+  } else {
+    confirmados.forEach(function(c, i) {
+      var acomps = '';
+      (c.acompanhantes || []).forEach(function(a) {
+        acomps += '<div class="acomp">↳ ' + a.nome + '</div>';
+      });
+      var totalP = c.totalPessoas || (1 + ((c.acompanhantes || []).length));
+      linhasConf += '<tr><td>' + (i + 1) + '</td><td>' + c.nome + acomps + '</td><td>' + c.fralda + '</td><td>' + totalP + '</td></tr>';
+    });
+  }
+
+  var linhasRec = '';
+  if (recusaram.length === 0) {
+    linhasRec = '<tr><td colspan="3" style="text-align:center;">Ninguém recusou ainda</td></tr>';
+  } else {
+    recusaram.forEach(function(c, i) {
+      var data = c.criadoEm ? new Date(c.criadoEm).toLocaleString('pt-BR') : '—';
+      linhasRec += '<tr><td>' + (i + 1) + '</td><td>' + c.nome + '</td><td>' + data + '</td></tr>';
+    });
+  }
+
+  var totalPessoas = confirmados.reduce(function(s, c) {
+    var acomps = Array.isArray(c.acompanhantes) ? c.acompanhantes.length : 0;
     return s + (c.totalPessoas || (1 + acomps));
   }, 0);
 
-  let html = `
-    <html><head><meta charset="UTF-8"><title>Relatório — Chá da Aurora</title>
-    <style>
-      body { font-family: Arial, sans-serif; padding: 25px; color: #333; }
-      h1 { color: #c2185b; border-bottom: 3px solid #c2185b; padding-bottom: 8px; }
-      h2 { color: #7b1fa2; margin-top: 25px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
-      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-      th, td { border: 1px solid #ccc; padding: 6px; text-align: left; font-size: 12px; }
-      th { background: #fce4ec; color: #c2185b; }
-      .resumo { background: #f5f5f5; padding: 12px; border-radius: 8px; margin: 15px 0; }
-      .resumo span { display: inline-block; margin-right: 20px; font-size: 14px; }
-      .rodape { margin-top: 30px; font-size: 10px; color: #999; text-align: center; }
-      .acomp { font-size: 10px; color: #666; }
-      @media print { body { padding: 10px; } }
-    </style></head><body>
-    <h1>🌸 Relatório — Chá de Bebê da Aurora</h1>
-    <p><strong>Data:</strong> 29 de Novembro de 2026 &nbsp;|&nbsp;
-    <strong>Local:</strong> Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
-    <p><strong>Gerado em:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+  var dataAtual = new Date().toLocaleString('pt-BR');
+  var qtdM = confirmados.filter(function(c) { return c.fralda === 'M'; }).length;
+  var qtdG = confirmados.filter(function(c) { return c.fralda === 'G'; }).length;
 
-    <div class="resumo">
-      <span>👥 <strong>Confirmações:</strong> ${convidados.length}</span>
-      <span>🧑‍🤝‍🧑 <strong>Pessoas total:</strong> ${totalPessoas}</span>
-      <span>👶 <strong>Fraldas M:</strong> ${convidados.filter(c=>c.fralda==='M').length}</span>
-      <span>👶 <strong>Fraldas G:</strong> ${convidados.filter(c=>c.fralda==='G').length}</span>
-    </div>
+  var html = '';
+  html += '<!DOCTYPE html><html><head><meta charset="UTF-8">';
+  html += '<title>Relatorio - Cha da Aurora</title>';
+  html += '<style>';
+  html += 'body { font-family: Arial, sans-serif; padding: 20px; color: #333; }';
+  html += 'h1 { color: #c2185b; border-bottom: 3px solid #c2185b; padding-bottom: 8px; font-size: 20px; }';
+  html += 'h2 { color: #7b1fa2; margin-top: 25px; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }';
+  html += 'table { width: 100%; border-collapse: collapse; margin-top: 10px; }';
+  html += 'th, td { border: 1px solid #ccc; padding: 6px; text-align: left; font-size: 12px; }';
+  html += 'th { background: #fce4ec; color: #c2185b; }';
+  html += '.acomp { font-size: 10px; color: #666; }';
+  html += '.resumo { background: #f5f5f5; padding: 10px; border-radius: 8px; margin: 12px 0; font-size: 13px; }';
+  html += '.rodape { margin-top: 25px; font-size: 10px; color: #999; text-align: center; }';
+  html += '</style></head><body>';
 
-    <h2>Lista de confirmados</h2>
-    <table>
-      <tr><th>#</th><th>Nome</th><th>Fralda</th><th>Pessoas</th></tr>
-      ${convidados.length ? convidados.map((c,i) => {
-        const acomps = (c.acompanhantes||[]).map(a => `<div class="acomp">↳ ${a.nome}</div>`).join('');
-        const totalP = c.totalPessoas || (1 + (c.acompanhantes?.length || 0));
-        return `<tr><td>${i+1}</td><td>${c.nome}${acomps}</td><td>${c.fralda}</td><td>${totalP}</td></tr>`;
-      }).join('') : '<tr><td colspan="4" style="text-align:center;">Nenhum confirmado ainda</td></tr>'}
-    </table>
+  html += '<h1>🌸 Relatorio - Cha de Bebe da Aurora</h1>';
+  html += '<p style="font-size:13px;"><strong>Data:</strong> 29 de Novembro de 2026 &nbsp;|&nbsp; <strong>Local:</strong> Estrada do Pium, 4145 - Mogi das Cruzes/SP</p>';
+  html += '<p style="font-size:11px;color:#999;">Gerado em: ' + dataAtual + '</p>';
 
-    <div class="rodape">Relatório gerado pelo painel admin — Chá da Aurora 🌟</div>
-    </body></html>
-  `;
+  html += '<div class="resumo">';
+  html += '👥 <strong>Confirmacoes:</strong> ' + confirmados.length + ' &nbsp;&nbsp; ';
+  html += '🧑 <strong>Pessoas:</strong> ' + totalPessoas + ' &nbsp;&nbsp; ';
+  html += '👶 <strong>Fralda M:</strong> ' + qtdM + ' &nbsp;&nbsp; ';
+  html += '👶 <strong>Fralda G:</strong> ' + qtdG + ' &nbsp;&nbsp; ';
+  html += '💔 <strong>Nao vao:</strong> ' + recusaram.length;
+  html += '</div>';
 
-  const win = window.open('', '_blank');
+  html += '<h2>✅ Lista de confirmados</h2>';
+  html += '<table>';
+  html += '<tr><th>#</th><th>Nome</th><th>Fralda</th><th>Pessoas</th></tr>';
+  html += linhasConf;
+  html += '</table>';
+
+  html += '<h2>💔 Nao vao poder vir</h2>';
+  html += '<table>';
+  html += '<tr><th>#</th><th>Nome</th><th>Data</th></tr>';
+  html += linhasRec;
+  html += '</table>';
+
+  html += '<div class="rodape">Relatorio gerado pelo painel admin - Cha da Aurora 🌟</div>';
+  html += '</body></html>';
+
+  var win = window.open('', '_blank');
   win.document.write(html);
   win.document.close();
-  setTimeout(() => win.print(), 500);
-};
+  setTimeout(function() { win.print(); }, 500);
+}
+
+document.getElementById('btnImprimir').addEventListener('click', imprimirRelatorio);
 </script>
 </body>
 </html>
