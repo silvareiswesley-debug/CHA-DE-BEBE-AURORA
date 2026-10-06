@@ -38,6 +38,73 @@
     100% { transform: translateY(-10vh) rotate(360deg); opacity:0; }
   }
 
+  /* ===== BOTÃO DE MÚSICA VISÍVEL ===== */
+  .btn-musica-flutuante {
+    position: fixed;
+    bottom: 25px;
+    right: 20px;
+    z-index: 250;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f06292, #c2185b);
+    border: 3px solid #ffd54f;
+    color: white;
+    font-size: 1.7em;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(194,24,91,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    animation: pulsar-musica 1.6s ease-in-out infinite;
+    touch-action: manipulation;
+    transition: transform 0.2s;
+  }
+  .btn-musica-flutuante:active {
+    transform: scale(0.92);
+  }
+  .btn-musica-flutuante.tocando {
+    background: linear-gradient(135deg, #66bb6a, #2e7d32);
+    border-color: #a5d6a7;
+    animation: rodar-disco 3s linear infinite;
+  }
+  @keyframes pulsar-musica {
+    0%,100% {
+      box-shadow: 0 8px 25px rgba(194,24,91,0.7);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 8px 40px rgba(194,24,91,1);
+      transform: scale(1.1);
+    }
+  }
+  @keyframes rodar-disco {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .btn-musica-flutuante .texto-bolinha {
+    position: absolute;
+    top: -12px;
+    right: -6px;
+    background: #ffd54f;
+    color: #4a1a5e;
+    font-size: 0.35em;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    animation: pulsar-bolinha 1.5s ease-in-out infinite;
+  }
+  @keyframes pulsar-bolinha {
+    0%,100% { transform: scale(1); }
+    50%     { transform: scale(1.15); }
+  }
+  .btn-musica-flutuante.tocando .texto-bolinha {
+    display: none;
+  }
+
   .titulo-fixo {
     position: fixed;
     top: 20px; left: 0; right: 0;
@@ -278,13 +345,6 @@
     0%   { background-position: 0% 50%; }
     100% { background-position: 200% 50%; }
   }
-  .regra-carta:nth-child(1) { animation-delay: 0.1s; }
-  .regra-carta:nth-child(2) { animation-delay: 0.15s; }
-  .regra-carta:nth-child(3) { animation-delay: 0.2s; }
-  .regra-carta:nth-child(4) { animation-delay: 0.25s; }
-  .regra-carta:nth-child(5) { animation-delay: 0.3s; }
-  .regra-carta:nth-child(6) { animation-delay: 0.35s; }
-  .regra-carta:nth-child(7) { animation-delay: 0.4s; }
   @keyframes slideIn {
     from { opacity:0; transform: translateX(-25px) scale(0.95); }
     to   { opacity:1; transform: translateX(0) scale(1); }
@@ -335,7 +395,6 @@
   .regra-carta.destaque {
     background: linear-gradient(135deg, #fff3e0, #ffe0b2);
     border-left-color: #ef6c00;
-    animation: slideIn 0.6s ease backwards, pulsar-destaque 2.5s ease-in-out infinite;
   }
   .regra-carta.destaque::before {
     background: linear-gradient(90deg, #ef6c00, #ffd54f, #ef6c00);
@@ -346,11 +405,6 @@
   .regra-carta.alerta {
     background: linear-gradient(135deg, #ffebee, #ffcdd2);
     border-left-color: #c62828;
-    animation: slideIn 0.6s ease backwards, pulsar-alerta 2s ease-in-out infinite;
-  }
-  @keyframes pulsar-alerta {
-    0%,100% { box-shadow: 0 4px 14px rgba(198,40,40,0.15); }
-    50%     { box-shadow: 0 4px 20px rgba(198,40,40,0.45); }
   }
   .regra-carta.alerta::before {
     background: linear-gradient(90deg, #c62828, #ef5350, #c62828);
@@ -387,15 +441,6 @@
     position: relative;
     overflow: hidden;
   }
-  .btn-carta::before {
-    content:'';
-    position:absolute;
-    top:0; left:-100%;
-    width:100%; height:100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transition: left 0.6s;
-  }
-  .btn-carta:hover::before { left:100%; }
   .btn-carta:active { transform: scale(0.96); }
   .btn-carta .icone { font-size:1.35em; }
 
@@ -482,6 +527,7 @@
     .regra-obs { font-size: 0.8em; }
     .btn-carta { font-size: 0.8em; padding: 10px 6px; min-height: 52px; }
     .btn-confirmar { font-size: 0.92em; }
+    .btn-musica-flutuante { width: 58px; height: 58px; font-size: 1.5em; }
     .tela-aux-conteudo { padding: 20px 15px; }
   }
 
@@ -497,9 +543,16 @@
 
 <div id="particulas"></div>
 
-<audio id="musica" loop preload="auto" playsinline muted="false">
+<audio id="musica" loop preload="auto" playsinline webkit-playsinline>
   <source src="musica.mp3" type="audio/mpeg">
+  Seu navegador não suporta áudio.
 </audio>
+
+<!-- BOTÃO DE MÚSICA SEMPRE VISÍVEL -->
+<button class="btn-musica-flutuante" id="btnMusica" title="Ativar música">
+  🎵
+  <span class="texto-bolinha">Toque aqui!</span>
+</button>
 
 <div class="titulo-fixo">
   <div class="estrelinhas">✦ ✧ ✦</div>
@@ -690,44 +743,35 @@ for (let i = 0; i < 18; i++) {
   particulas.appendChild(p);
 }
 
-/* ===== MÚSICA - toca automaticamente ao abrir o link ===== */
+/* ===== MÚSICA ===== */
 const musica = document.getElementById('musica');
+const btnMusica = document.getElementById('btnMusica');
 let musicaLigada = false;
 
 function tocarMusica() {
   if (musicaLigada) return;
 
-  /* Se veio de outra página com música tocando, retoma do tempo salvo */
+  /* Retoma do tempo salvo */
   const tempoSalvo = sessionStorage.getItem('musicaTempo');
   if (tempoSalvo && !isNaN(parseFloat(tempoSalvo))) {
     try { musica.currentTime = parseFloat(tempoSalvo); } catch(e) {}
   }
 
-  musica.volume = 0.4;
+  musica.volume = 0.5;
   const p = musica.play();
   if (p) {
     p.then(() => {
       musicaLigada = true;
+      btnMusica.classList.add('tocando');
+      btnMusica.innerHTML = '🔊';
       sessionStorage.setItem('musicaTocando', 'sim');
     }).catch(() => {
-      /* Autoplay bloqueado — tenta no primeiro toque/clique em qualquer lugar */
-      const iniciar = () => {
-        musica.play().then(() => {
-          musicaLigada = true;
-          sessionStorage.setItem('musicaTocando', 'sim');
-        }).catch(() => {});
-        document.removeEventListener('click', iniciar);
-        document.removeEventListener('touchstart', iniciar);
-        document.removeEventListener('keydown', iniciar);
-      };
-      document.addEventListener('click', iniciar);
-      document.addEventListener('touchstart', iniciar);
-      document.addEventListener('keydown', iniciar);
+      musicaLigada = false;
     });
   }
 }
 
-/* Tenta tocar IMEDIATAMENTE (várias chamadas para garantir) */
+/* Tenta tocar automaticamente em vários momentos */
 tocarMusica();
 document.addEventListener('DOMContentLoaded', tocarMusica);
 window.addEventListener('load', tocarMusica);
@@ -735,14 +779,27 @@ setTimeout(tocarMusica, 100);
 setTimeout(tocarMusica, 500);
 setTimeout(tocarMusica, 1000);
 
-/* Salva tempo da música periodicamente para retomar na próxima página */
+/* Botão de música */
+btnMusica.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (musicaLigada) {
+    musica.pause();
+    musicaLigada = false;
+    btnMusica.classList.remove('tocando');
+    btnMusica.innerHTML = '🎵<span class="texto-bolinha">Toque aqui!</span>';
+  } else {
+    tocarMusica();
+  }
+});
+
+/* Salva tempo periodicamente */
 setInterval(() => {
   if (musicaLigada && musica.currentTime > 0) {
     sessionStorage.setItem('musicaTempo', musica.currentTime.toString());
   }
 }, 1000);
 
-/* Salva o tempo antes de sair da página */
+/* Salva antes de sair */
 window.addEventListener('beforeunload', () => {
   if (musicaLigada) {
     sessionStorage.setItem('musicaTempo', musica.currentTime.toString());
@@ -753,8 +810,8 @@ window.addEventListener('beforeunload', () => {
 /* ===== ENVELOPE ===== */
 const envelope = document.getElementById('envelope');
 envelope.addEventListener('click', () => {
-  if (envelope.classList.contains('aberto')) return;
   if (!musicaLigada) tocarMusica();
+  if (envelope.classList.contains('aberto')) return;
   envelope.classList.add('aberto');
   envelope.style.animation = 'none';
 });
