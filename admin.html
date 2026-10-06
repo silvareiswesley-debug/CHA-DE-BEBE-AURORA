@@ -41,6 +41,11 @@
     text-shadow: 2px 2px 0 #fff, 0 0 15px rgba(255,255,255,0.9);
     font-size: 1.5em;
     margin-top: 0;
+    animation: brilho-titulo 3s ease-in-out infinite;
+  }
+  @keyframes brilho-titulo {
+    0%,100% { text-shadow: 2px 2px 0 #fff, 0 0 15px rgba(255,255,255,0.9); }
+    50%     { text-shadow: 2px 2px 0 #fff, 0 0 30px rgba(255,213,79,0.9); }
   }
   h2 { color: #7b1fa2; margin-top: 26px; text-shadow: 1px 1px 0 #fff; font-size: 1.12em; }
   .btn {
@@ -53,6 +58,7 @@
     min-height: 44px;
     font-family: inherit;
     touch-action: manipulation;
+    transition: transform 0.15s;
   }
   .btn:active { transform: scale(0.97); }
   .btn-verde { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
@@ -91,10 +97,21 @@
     padding: 16px 10px; border-radius: 16px;
     text-align: center; color: white; font-weight: bold;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    animation: aparecer 0.5s ease;
+    transition: transform 0.2s;
+  }
+  .stat:active { transform: scale(0.98); }
+  @keyframes aparecer {
+    from { opacity:0; transform: translateY(10px); }
+    to   { opacity:1; transform: translateY(0); }
   }
   .stat .num { font-size: 26px; display: block; }
   .stat .lbl { font-size: 10px; opacity: 0.95; text-transform: uppercase; letter-spacing: 1px; }
-  .stat.total   { background: linear-gradient(135deg, #ba68c8, #7b1fa2); }
+  .stat.total   { background: linear-gradient(135deg, #ba68c8, #7b1fa2); animation: pulsar-total 3s ease-in-out infinite; }
+  @keyframes pulsar-total {
+    0%,100% { box-shadow: 0 6px 20px rgba(123,31,162,0.3); }
+    50%     { box-shadow: 0 6px 30px rgba(123,31,162,0.7); }
+  }
   .stat.pessoas { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
   .stat.m       { background: linear-gradient(135deg, #f06292, #c2185b); }
   .stat.g       { background: linear-gradient(135deg, #4fc3f7, #0277bd); }
@@ -107,6 +124,11 @@
     font-size: 0.7em; margin-left: 6px;
     font-weight: bold;
     display: inline-block;
+    animation: pulsar-badge 2s ease-in-out infinite;
+  }
+  @keyframes pulsar-badge {
+    0%,100% { opacity:0.8; }
+    50%     { opacity:1; }
   }
 
   .modal-bg {
@@ -117,7 +139,8 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  .modal-bg.ativo { display: flex; }
+  .modal-bg.ativo { display: flex; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
   .modal {
     background: white; padding: 25px; border-radius: 20px;
     max-width: 480px; width: 100%;
@@ -125,6 +148,7 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     max-height: 90vh; overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    animation: aparecer 0.4s ease;
   }
   .modal h3 { color: #c2185b; margin-top: 0; font-size: 1.15em; }
   .modal input, .modal select {
@@ -137,7 +161,11 @@
   }
   .modal-botoes { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
   .modal-botoes .btn { flex: 1; min-width: 120px; }
-  .acomp-edit { display: flex; gap: 6px; margin-bottom: 6px; }
+  .acomp-edit { display: flex; gap: 6px; margin-bottom: 6px; animation: slideIn 0.3s ease; }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateX(-10px); }
+    to   { opacity:1; transform: translateX(0); }
+  }
   .acomp-edit input { flex: 1; }
   .acomp-edit .btn { min-height: 46px; padding: 8px 14px; }
 
@@ -178,6 +206,11 @@
 </style>
 </head>
 <body>
+
+<audio id="musicaAdmin" loop preload="auto" playsinline>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
   <div class="card">
     <h1>🌸 Painel Admin — Chá da Aurora</h1>
@@ -244,6 +277,34 @@
 import { db } from './firebase.js';
 import { collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/* ===== MÚSICA DE FUNDO ===== */
+const musicaAdmin = document.getElementById('musicaAdmin');
+let musicaAdminLigada = false;
+
+function tocarMusicaAdmin() {
+  if (musicaAdminLigada) return;
+  musicaAdmin.volume = 0.25;
+  const p = musicaAdmin.play();
+  if (p) {
+    p.then(() => { musicaAdminLigada = true; })
+     .catch(() => {
+       const iniciar = () => {
+         musicaAdmin.play().then(() => { musicaAdminLigada = true; }).catch(() => {});
+         document.removeEventListener('click', iniciar);
+         document.removeEventListener('touchstart', iniciar);
+         document.removeEventListener('keydown', iniciar);
+       };
+       document.addEventListener('click', iniciar);
+       document.addEventListener('touchstart', iniciar);
+       document.addEventListener('keydown', iniciar);
+     });
+  }
+}
+tocarMusicaAdmin();
+window.addEventListener('load', tocarMusicaAdmin);
+document.addEventListener('DOMContentLoaded', tocarMusicaAdmin);
+
+/* ===== LINK COMPARTILHÁVEL ===== */
 var linkCompartilhavel = location.origin + location.pathname.replace('admin.html', 'index.html');
 document.getElementById('linkCompartilhavel').value = linkCompartilhavel;
 
@@ -260,8 +321,10 @@ document.getElementById('btnCopiar').addEventListener('click', function() {
   }
 });
 
+/* ===== ESTADO ===== */
 var convidados = [];
 
+/* ===== TEMPO REAL ===== */
 onSnapshot(collection(db, 'convidados'), function(snap) {
   convidados = [];
   snap.forEach(function(d) {
@@ -276,6 +339,7 @@ onSnapshot(collection(db, 'convidados'), function(snap) {
 
 document.getElementById('busca').addEventListener('input', renderLista);
 
+/* ===== ESTATÍSTICAS ===== */
 function atualizarStats() {
   var confirmados = convidados.filter(function(c) { return c.confirmado !== false; });
   document.getElementById('statTotal').textContent = confirmados.length;
@@ -290,6 +354,7 @@ function atualizarStats() {
   document.getElementById('statG').textContent = confirmados.filter(function(c) { return c.fralda === 'G'; }).length;
 }
 
+/* ===== LISTA DE CONFIRMADOS ===== */
 function renderLista() {
   var busca = document.getElementById('busca').value.toLowerCase();
   var lista = document.getElementById('lista');
@@ -338,6 +403,7 @@ function renderLista() {
   });
 }
 
+/* ===== LISTA DE RECUSARAM ===== */
 function renderRecusaram() {
   var recusaram = convidados.filter(function(c) { return c.confirmado === false; });
   var tb = document.getElementById('listaRecusaram');
@@ -358,6 +424,7 @@ function renderRecusaram() {
   tb.innerHTML = html;
 }
 
+/* ===== EDIÇÃO ===== */
 function abrirEdicao(id) {
   var c = null;
   for (var i = 0; i < convidados.length; i++) {
@@ -427,6 +494,7 @@ document.getElementById('btnAddAcompEdit').addEventListener('click', function() 
 document.getElementById('btnSalvar').addEventListener('click', salvarEdicao);
 document.getElementById('btnCancelar').addEventListener('click', fecharModal);
 
+/* ===== IMPRESSÃO ===== */
 function imprimirRelatorio() {
   var confirmados = convidados.filter(function(c) { return c.confirmado !== false; });
   var recusaram = convidados.filter(function(c) { return c.confirmado === false; });
