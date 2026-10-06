@@ -45,10 +45,20 @@
     border: 3px solid #ffd54f;
     text-align:center;
     position: relative; z-index: 5;
+    animation: aparecer 0.8s ease;
+  }
+  @keyframes aparecer {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
   }
   .coroa-topo {
     font-size: 2.4em; margin-bottom: 5px;
     filter: drop-shadow(0 4px 8px rgba(230,81,0,0.4));
+    animation: balancar-coroa 3s ease-in-out infinite;
+  }
+  @keyframes balancar-coroa {
+    0%,100% { transform: rotate(-5deg); }
+    50%     { transform: rotate(5deg); }
   }
   h1 { font-size:1.7em; margin:0 0 5px; color:#7b1fa2; text-shadow: 1px 1px 0 #ffd54f; }
   h2 { font-weight:normal; margin-top:0; font-size:0.95em; color:#c2185b; }
@@ -84,6 +94,11 @@
     border-left:5px solid #f9a825;
     border-radius:12px; padding:13px 16px; margin-top:15px;
     font-size:0.9em; text-align:left;
+    animation: pulsar-aviso 3s ease-in-out infinite;
+  }
+  @keyframes pulsar-aviso {
+    0%,100% { box-shadow: 0 2px 8px rgba(249,168,37,0.2); }
+    50%     { box-shadow: 0 4px 20px rgba(249,168,37,0.5); }
   }
   .aviso strong { color:#e65100; }
 
@@ -92,6 +107,11 @@
     display:flex; gap:8px; align-items:center;
     background:white; padding:10px; border-radius:12px;
     margin-bottom:8px; border:2px solid #f3e5f5;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateX(-20px); }
+    to   { opacity:1; transform: translateX(0); }
   }
   .acomp-item input { margin:0; flex:1; padding:11px; }
   .btn-remover {
@@ -125,15 +145,21 @@
     font-family:inherit;
     min-height: 54px;
     touch-action: manipulation;
+    animation: pulsar-enviar 2.5s ease-in-out infinite;
+  }
+  @keyframes pulsar-enviar {
+    0%,100% { box-shadow: 0 6px 20px rgba(46,125,50,0.4); }
+    50%     { box-shadow: 0 8px 30px rgba(46,125,50,0.8); }
   }
   .btn-enviar:active { transform: scale(0.98); }
-  .btn-enviar:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+  .btn-enviar:disabled { opacity:0.6; cursor:not-allowed; transform:none; animation:none; }
 
   .sucesso {
     background: linear-gradient(180deg,#e8f5e9,#c8e6c9);
     border:3px solid #66bb6a;
     border-radius:16px; padding:28px 20px; margin-top:15px;
     color:#1b5e20; text-align:center;
+    animation: aparecer 0.8s ease;
   }
   .sucesso .emoji { font-size:3em; animation: pulsar-emoji 1.5s infinite; display:inline-block; }
   @keyframes pulsar-emoji { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
@@ -157,6 +183,10 @@
 </head>
 <body>
 <div id="particulas"></div>
+
+<audio id="musica" loop preload="auto">
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
 
 <div class="card">
   <a href="index.html" class="voltar">← Voltar ao convite</a>
@@ -199,6 +229,7 @@
 import { db } from './firebase.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/* PARTÍCULAS */
 const simbolos = ['✦','✧','🌸','💜','✨','👑','💕','⭐'];
 const cont = document.getElementById('particulas');
 for (let i = 0; i < 15; i++) {
@@ -211,6 +242,36 @@ for (let i = 0; i < 15; i++) {
   cont.appendChild(p);
 }
 
+/* MÚSICA CONTÍNUA */
+const musica = document.getElementById('musica');
+let musicaLigada = false;
+
+function tocarMusica() {
+  if (musicaLigada) return;
+  musica.volume = 0.4;
+  const p = musica.play();
+  if (p) {
+    p.then(() => {
+      musicaLigada = true;
+    }).catch(() => {
+      const iniciar = () => {
+        musica.play().then(() => { musicaLigada = true; }).catch(() => {});
+        document.removeEventListener('click', iniciar);
+        document.removeEventListener('touchstart', iniciar);
+        document.removeEventListener('keydown', iniciar);
+      };
+      document.addEventListener('click', iniciar);
+      document.addEventListener('touchstart', iniciar);
+      document.addEventListener('keydown', iniciar);
+    });
+  }
+}
+
+tocarMusica();
+window.addEventListener('load', tocarMusica);
+document.addEventListener('DOMContentLoaded', tocarMusica);
+
+/* FORM */
 const listaAcomp = document.getElementById('listaAcomp');
 let contAcomp = 0;
 
