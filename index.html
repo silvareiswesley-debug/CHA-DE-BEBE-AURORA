@@ -62,6 +62,11 @@
     letter-spacing: 1px;
     font-weight: bold;
     font-family: 'Comic Sans MS', cursive;
+    animation: brilho-titulo 3s ease-in-out infinite;
+  }
+  @keyframes brilho-titulo {
+    0%,100% { text-shadow: 0 0 10px #c2185b, 0 0 20px #7b1fa2, 2px 2px 0 #4a1a5e; }
+    50%     { text-shadow: 0 0 20px #ffd54f, 0 0 40px #c2185b, 2px 2px 0 #4a1a5e; }
   }
   .titulo-fixo .estrelinhas {
     color: #ffd54f;
@@ -69,6 +74,12 @@
     letter-spacing: 8px;
     text-shadow: 0 0 8px #ffd54f;
     margin: 3px 0;
+    animation: girar-estrelas 4s linear infinite;
+    display: inline-block;
+  }
+  @keyframes girar-estrelas {
+    0%,100% { transform: rotate(-3deg); }
+    50%     { transform: rotate(3deg); }
   }
 
   .palco {
@@ -92,8 +103,8 @@
   }
   .envelope:active { transform: scale(1.03); }
   @keyframes flutuar {
-    0%,100% { transform: translateY(0); }
-    50%     { transform: translateY(-12px); }
+    0%,100% { transform: translateY(0) rotate(0); }
+    50%     { transform: translateY(-12px) rotate(1deg); }
   }
 
   .env-corpo {
@@ -166,32 +177,38 @@
     font-weight:bold;
   }
   @keyframes pulsar-dica {
-    0%,100% { opacity:0.6; }
-    50%     { opacity:1; transform:translateX(-50%) scale(1.05); }
+    0%,100% { opacity:0.6; transform:translateX(-50%) scale(1); }
+    50%     { opacity:1; transform:translateX(-50%) scale(1.1); }
   }
   .envelope.aberto .dica-toque { display:none; }
 
   .carta {
     position:absolute; left:50%; top:50%;
-    transform: translate(-50%, -50%) scale(0.6);
+    transform: translate(-50%, -50%) scale(0.6) rotate(-5deg);
     width: calc(100vw - 24px);
     max-width: 420px;
     max-height: 92vh;
     background: linear-gradient(180deg, #fffdf7, #faf0ff);
     border-radius: 18px;
     padding: 22px 18px 26px;
-    box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 60px rgba(255,213,79,0.4);
     border: 3px solid #ffd54f;
     overflow-y: auto;
     opacity:0; pointer-events:none;
-    transition: all 1s cubic-bezier(.68,-0.55,.27,1.55);
+    transition: all 1.2s cubic-bezier(.68,-0.55,.27,1.55);
     z-index: 10;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
   }
   .envelope.aberto .carta {
     opacity:1; pointer-events:auto;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1) rotate(0);
+    animation: aparecer-carta 1.2s ease;
+  }
+  @keyframes aparecer-carta {
+    0%   { transform: translate(-50%, -50%) scale(0.6) rotate(-5deg); }
+    60%  { transform: translate(-50%, -50%) scale(1.05) rotate(2deg); }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0); }
   }
   .carta::-webkit-scrollbar { width:6px; }
   .carta::-webkit-scrollbar-thumb { background:#c2185b; border-radius:3px; }
@@ -199,11 +216,21 @@
   .carta-coroa {
     text-align:center; font-size:2.2em; margin-bottom:3px;
     filter: drop-shadow(0 3px 6px rgba(230,81,0,0.4));
+    animation: balancar-coroa 3s ease-in-out infinite;
+  }
+  @keyframes balancar-coroa {
+    0%,100% { transform: rotate(-5deg) scale(1); }
+    50%     { transform: rotate(5deg) scale(1.05); }
   }
   .carta h1 {
     text-align:center; color:#7b1fa2; font-size:1.55em;
     margin:0 0 4px; text-shadow: 1px 1px 0 #ffd54f;
     font-family:'Comic Sans MS', cursive;
+    animation: fadeUp 0.8s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(10px); }
+    to   { opacity:1; transform: translateY(0); }
   }
   .carta h2 {
     text-align:center; color:#c2185b; font-weight:normal;
@@ -212,6 +239,11 @@
   .carta .estrelas {
     text-align:center; color:#f9a825;
     font-size:1em; letter-spacing:6px; margin:6px 0;
+    animation: brilhar-estrelas 2s ease-in-out infinite;
+  }
+  @keyframes brilhar-estrelas {
+    0%,100% { opacity:0.6; letter-spacing:6px; }
+    50%     { opacity:1; letter-spacing:8px; }
   }
   .carta p {
     color:#4a148c; line-height:1.5; font-size:0.9em;
@@ -220,6 +252,7 @@
   .carta .divisor {
     text-align:center; margin:10px 0; color:#c2185b;
     font-size:0.95em; letter-spacing:3px;
+    animation: brilhar-estrelas 2s ease-in-out infinite;
   }
 
   .regra-carta {
@@ -232,6 +265,14 @@
     font-size: 0.82em;
     line-height: 1.4;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    animation: slideIn 0.6s ease backwards;
+  }
+  .regra-carta:nth-child(1) { animation-delay: 0.1s; }
+  .regra-carta:nth-child(2) { animation-delay: 0.2s; }
+  .regra-carta:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateX(-20px); }
+    to   { opacity:1; transform: translateX(0); }
   }
   .regra-carta strong {
     color: #c2185b;
@@ -250,6 +291,11 @@
   .regra-carta.destaque {
     background: rgba(255,243,224,0.95);
     border-left-color: #ef6c00;
+    animation: pulsar-destaque 2.5s ease-in-out infinite;
+  }
+  @keyframes pulsar-destaque {
+    0%,100% { box-shadow: 0 2px 8px rgba(239,108,0,0.2); }
+    50%     { box-shadow: 0 4px 20px rgba(239,108,0,0.5); }
   }
   .regra-carta.destaque strong { color: #e65100; }
   .regra-carta.alerta {
@@ -274,11 +320,30 @@
     min-height: 56px;
     justify-content: center;
     touch-action: manipulation;
+    position: relative;
+    overflow: hidden;
   }
+  .btn-carta::before {
+    content:'';
+    position:absolute;
+    top:0; left:-100%;
+    width:100%; height:100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s;
+  }
+  .btn-carta:hover::before { left:100%; }
   .btn-carta:active { transform: scale(0.96); }
   .btn-carta .icone { font-size:1.35em; }
 
-  .btn-confirmar  { background: linear-gradient(135deg,#66bb6a,#2e7d32); grid-column: span 2; font-size:1em; padding:15px; }
+  .btn-confirmar  {
+    background: linear-gradient(135deg,#66bb6a,#2e7d32);
+    grid-column: span 2; font-size:1em; padding:15px;
+    animation: pulsar-confirmar 2s ease-in-out infinite;
+  }
+  @keyframes pulsar-confirmar {
+    0%,100% { box-shadow: 0 5px 15px rgba(46,125,50,0.4); }
+    50%     { box-shadow: 0 8px 30px rgba(46,125,50,0.8); }
+  }
   .btn-local      { background: linear-gradient(135deg,#42a5f5,#1565c0); }
   .btn-presentes  { background: linear-gradient(135deg,#f9a825,#e65100); }
   .btn-recusar    { background: linear-gradient(135deg,#ef5350,#b71c1c); grid-column: span 2; font-size:0.88em; padding:12px; }
@@ -304,6 +369,7 @@
     border: 3px solid #ffd54f;
     box-shadow: 0 25px 70px rgba(0,0,0,0.5);
     text-align:center;
+    animation: aparecer-carta 0.6s ease;
   }
   .tela-aux h3 { color:#c2185b; margin-bottom:12px; font-size:1.15em; }
   .tela-aux p  { color:#4a148c; margin:8px 0; line-height:1.45; font-size:0.9em; }
@@ -325,7 +391,11 @@
     margin: 8px 0; text-align:left;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     border-left: 5px solid #f9a825;
+    animation: slideIn 0.5s ease backwards;
   }
+  .item-presente:nth-child(3) { animation-delay: 0.1s; }
+  .item-presente:nth-child(4) { animation-delay: 0.2s; }
+  .item-presente:nth-child(5) { animation-delay: 0.3s; }
   .item-presente .em { font-size:1.6em; flex-shrink:0; }
   .item-presente strong { color:#c2185b; display:block; font-size:0.88em; }
   .item-presente small { color:#666; font-size:0.78em; line-height:1.35; }
@@ -364,7 +434,7 @@
 
 <div id="particulas"></div>
 
-<audio id="musica" loop preload="auto">
+<audio id="musica" loop preload="auto" playsinline>
   <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
@@ -532,31 +602,59 @@ for (let i = 0; i < 18; i++) {
   particulas.appendChild(p);
 }
 
-/* MÚSICA - começa ao clicar no envelope */
+/* ===== MÚSICA - toca automaticamente ao carregar ===== */
 const musica = document.getElementById('musica');
 let musicaLigada = false;
 
 function tocarMusica() {
   if (musicaLigada) return;
   musica.volume = 0.4;
-  musica.play().then(() => {
-    musicaLigada = true;
-  }).catch((err) => {
-    console.log('Música bloqueada pelo navegador:', err);
-  });
+  const p = musica.play();
+  if (p) {
+    p.then(() => {
+      musicaLigada = true;
+      sessionStorage.setItem('musicaTocando', 'sim');
+    }).catch(() => {
+      /* Autoplay bloqueado — tenta no primeiro toque/clique */
+      const iniciar = () => {
+        musica.play().then(() => {
+          musicaLigada = true;
+          sessionStorage.setItem('musicaTocando', 'sim');
+        }).catch(() => {});
+        document.removeEventListener('click', iniciar);
+        document.removeEventListener('touchstart', iniciar);
+        document.removeEventListener('keydown', iniciar);
+      };
+      document.addEventListener('click', iniciar);
+      document.addEventListener('touchstart', iniciar);
+      document.addEventListener('keydown', iniciar);
+    });
+  }
+}
+
+/* Tenta tocar assim que a página carrega */
+tocarMusica();
+window.addEventListener('load', tocarMusica);
+document.addEventListener('DOMContentLoaded', tocarMusica);
+
+/* Se já estava tocando em outra página, continua */
+if (sessionStorage.getItem('musicaTocando') === 'sim') {
+  musicaLigada = false;
+  tocarMusica();
 }
 
 /* ENVELOPE */
 const envelope = document.getElementById('envelope');
 envelope.addEventListener('click', () => {
   if (envelope.classList.contains('aberto')) return;
-  tocarMusica();
+  if (!musicaLigada) tocarMusica();
   envelope.classList.add('aberto');
   envelope.style.animation = 'none';
 });
 
-/* AÇÕES */
+/* AÇÕES - mantém música tocando ao mudar de página */
 window.irConfirmar = function() {
+  sessionStorage.setItem('musicaTocando', 'sim');
   const flash = document.getElementById('flash');
   flash.classList.add('ativo');
   setTimeout(() => { window.location.href = 'confirmar.html'; }, 500);
