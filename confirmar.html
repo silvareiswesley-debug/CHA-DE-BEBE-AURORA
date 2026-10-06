@@ -184,7 +184,7 @@
 <body>
 <div id="particulas"></div>
 
-<audio id="musica" loop preload="auto">
+<audio id="musica" loop preload="auto" playsinline>
   <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
@@ -229,7 +229,7 @@
 import { db } from './firebase.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* PARTÍCULAS */
+/* ===== PARTÍCULAS ===== */
 const simbolos = ['✦','✧','🌸','💜','✨','👑','💕','⭐'];
 const cont = document.getElementById('particulas');
 for (let i = 0; i < 15; i++) {
@@ -242,20 +242,32 @@ for (let i = 0; i < 15; i++) {
   cont.appendChild(p);
 }
 
-/* MÚSICA CONTÍNUA */
+/* ===== MÚSICA - retoma de onde parou ===== */
 const musica = document.getElementById('musica');
 let musicaLigada = false;
 
 function tocarMusica() {
   if (musicaLigada) return;
+
+  /* Retoma do tempo salvo na página anterior */
+  const tempoSalvo = sessionStorage.getItem('musicaTempo');
+  if (tempoSalvo && !isNaN(parseFloat(tempoSalvo))) {
+    try { musica.currentTime = parseFloat(tempoSalvo); } catch(e) {}
+  }
+
   musica.volume = 0.4;
   const p = musica.play();
   if (p) {
     p.then(() => {
       musicaLigada = true;
+      sessionStorage.setItem('musicaTocando', 'sim');
     }).catch(() => {
+      /* Autoplay bloqueado — tenta no primeiro toque/clique */
       const iniciar = () => {
-        musica.play().then(() => { musicaLigada = true; }).catch(() => {});
+        musica.play().then(() => {
+          musicaLigada = true;
+          sessionStorage.setItem('musicaTocando', 'sim');
+        }).catch(() => {});
         document.removeEventListener('click', iniciar);
         document.removeEventListener('touchstart', iniciar);
         document.removeEventListener('keydown', iniciar);
@@ -267,11 +279,30 @@ function tocarMusica() {
   }
 }
 
+/* Tenta tocar em vários momentos para garantir */
 tocarMusica();
-window.addEventListener('load', tocarMusica);
 document.addEventListener('DOMContentLoaded', tocarMusica);
+window.addEventListener('load', tocarMusica);
+setTimeout(tocarMusica, 100);
+setTimeout(tocarMusica, 500);
+setTimeout(tocarMusica, 1000);
 
-/* FORM */
+/* Salva tempo da música periodicamente */
+setInterval(() => {
+  if (musicaLigada && musica.currentTime > 0) {
+    sessionStorage.setItem('musicaTempo', musica.currentTime.toString());
+  }
+}, 1000);
+
+/* Salva o tempo antes de sair da página */
+window.addEventListener('beforeunload', () => {
+  if (musicaLigada) {
+    sessionStorage.setItem('musicaTempo', musica.currentTime.toString());
+    sessionStorage.setItem('musicaTocando', 'sim');
+  }
+});
+
+/* ===== FORMULÁRIO ===== */
 const listaAcomp = document.getElementById('listaAcomp');
 let contAcomp = 0;
 
