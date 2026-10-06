@@ -2,337 +2,638 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Chá de Bebê da Aurora 🌸</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#7b1fa2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>💌 Convite Especial — Chá da Aurora 🌸</title>
 <style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
+    height:100%; width:100%;
+    overflow:hidden;
+    font-family:'Comic Sans MS','Quicksand',sans-serif;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-size: 16px;
   }
   body {
-    font-family: 'Comic Sans MS', 'Quicksand', sans-serif;
-    padding: 30px 15px;
-    background-image: url('fundo.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    background: linear-gradient(135deg, #4a1a5e, #7b1fa2 50%, #b39ddb);
+    display:flex; justify-content:center; align-items:center;
+    position:relative;
+    touch-action: manipulation;
+    overscroll-behavior: none;
   }
-  .card {
-    max-width: 680px; width: 100%;
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 25px; padding: 45px 35px;
-    box-shadow: 0 15px 50px rgba(90, 40, 120, 0.45);
-    border: 3px solid rgba(255, 255, 255, 0.6);
+
+  .particula {
+    position:fixed; pointer-events:none;
+    font-size:1.3em; opacity:0.7;
+    animation: subir linear infinite;
+    z-index:1;
+  }
+  @keyframes subir {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity:0; }
+    10%  { opacity:0.8; }
+    90%  { opacity:0.8; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity:0; }
+  }
+
+  .titulo-fixo {
+    position: fixed;
+    top: 20px; left: 0; right: 0;
     text-align: center;
-    position: relative;
-    z-index: 1;
+    z-index: 20;
+    pointer-events: none;
+    animation: fadeDown 1.2s ease;
+    padding: 0 15px;
   }
-  h1 {
-    font-size: 3em; margin: 0 0 5px;
-    color: #6a1b9a;
-    text-shadow: 2px 2px 0 #fff, 0 0 15px rgba(255,255,255,0.9);
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  h2 {
-    font-weight: normal; margin-top: 0; font-size: 1.3em;
-    color: #7b1fa2;
-    text-shadow: 1px 1px 0 #fff;
+  .titulo-fixo h1 {
+    margin: 0;
+    font-size: 1.7em;
+    color: #fff;
+    text-shadow:
+      0 0 10px #c2185b,
+      0 0 20px #7b1fa2,
+      2px 2px 0 #4a1a5e;
+    letter-spacing: 1px;
+    font-weight: bold;
+    font-family: 'Comic Sans MS', cursive;
   }
-  .info {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    padding: 18px; border-radius: 15px; margin: 25px 0;
-    border: 2px solid rgba(248, 187, 208, 0.8);
+  .titulo-fixo .estrelinhas {
+    color: #ffd54f;
+    font-size: 0.85em;
+    letter-spacing: 8px;
+    text-shadow: 0 0 8px #ffd54f;
+    margin: 3px 0;
   }
-  .estrelas { font-size: 1.5em; letter-spacing: 8px; color: #c2185b; text-shadow: 0 0 8px #fff; }
 
-  .regras { margin: 30px 0; text-align: left; }
-  .regras h3 {
-    text-align: center; color: #6a1b9a;
-    margin-bottom: 15px; font-size: 1.2em;
-    text-shadow: 1px 1px 0 #fff;
+  .btn-musica {
+    position:fixed; top:15px; right:15px; z-index:50;
+    width:50px; height:50px; border-radius:50%;
+    background:rgba(255,255,255,0.95);
+    border:2px solid #c2185b; cursor:pointer;
+    font-size:1.3em; box-shadow:0 4px 15px rgba(0,0,0,0.3);
+    transition:transform 0.3s;
+    touch-action: manipulation;
   }
-  .regra {
-    display: flex; gap: 12px; align-items: flex-start;
-    background: rgba(255, 255, 255, 0.78);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+  .btn-musica:active { transform:scale(0.92); }
+  .btn-musica.tocando { animation: pulsar-musica 1.5s infinite; }
+  @keyframes pulsar-musica {
+    0%,100% { box-shadow:0 4px 15px rgba(194,24,91,0.4); }
+    50%     { box-shadow:0 4px 25px rgba(194,24,91,0.9); }
+  }
+
+  .palco {
+    position:relative; z-index:5;
+    width:100%; max-width:520px; height:100vh;
+    display:flex; justify-content:center; align-items:center;
+    perspective: 1200px;
+    padding: 90px 15px 15px;
+  }
+
+  .envelope {
+    position:relative;
+    width:min(340px, 88vw);
+    height:min(230px, 60vw);
+    cursor:pointer;
+    transform-style: preserve-3d;
+    animation: flutuar 4s ease-in-out infinite;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+    transition: transform 0.6s;
+    touch-action: manipulation;
+  }
+  .envelope:active { transform: scale(1.03); }
+  @keyframes flutuar {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-12px); }
+  }
+
+  .env-corpo {
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+    border-radius: 12px;
+    border: 3px solid #b39ddb;
+    box-shadow: inset 0 -20px 40px rgba(123,31,162,0.15);
+    overflow:hidden;
+  }
+  .env-corpo::before {
+    content:''; position:absolute; inset:0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(194,24,91,0.08) 0 3px, transparent 3px),
+      radial-gradient(circle at 70% 60%, rgba(194,24,91,0.08) 0 3px, transparent 3px),
+      radial-gradient(circle at 40% 80%, rgba(194,24,91,0.08) 0 3px, transparent 3px);
+    background-size: 60px 60px;
+  }
+
+  .env-aba {
+    position:absolute; top:0; left:0; right:0;
+    height:60%;
+    background: linear-gradient(180deg, #d1c4e9, #b39ddb);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    transition: transform 0.8s cubic-bezier(.68,-0.55,.27,1.55);
+    z-index: 3;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  .envelope.aberto .env-aba {
+    transform: rotateX(180deg);
+    z-index:1;
+  }
+
+  .selo {
+    position:absolute; top:45%; left:50%;
+    transform:translate(-50%,-50%);
+    width:70px; height:70px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #ffd54f, #f9a825 60%, #e65100);
+    display:flex; justify-content:center; align-items:center;
+    font-size:1.8em; color:white;
+    box-shadow: 0 6px 20px rgba(230,81,0,0.6), inset 0 0 15px rgba(0,0,0,0.2);
+    z-index: 4;
+    border: 3px solid #ffb300;
+    transition: opacity 0.4s, transform 0.6s;
+  }
+  .selo::before {
+    content:''; position:absolute; inset:-8px;
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(255,213,79,0.5), transparent 70%);
+    animation: brilhar 2s infinite;
+  }
+  @keyframes brilhar {
+    0%,100% { opacity:0.5; transform:scale(1); }
+    50%     { opacity:1; transform:scale(1.15); }
+  }
+  .envelope.aberto .selo {
+    opacity:0; transform:translate(-50%,-50%) scale(0) rotate(180deg);
+  }
+
+  .dica-toque {
+    position:absolute;
+    bottom:-45px; left:50%; transform:translateX(-50%);
+    color:#ffd54f; font-size:0.9em;
+    text-shadow:0 0 10px #7b1fa2;
+    animation: pulsar-dica 1.8s infinite;
+    white-space:nowrap;
+    pointer-events:none;
+    font-weight:bold;
+  }
+  @keyframes pulsar-dica {
+    0%,100% { opacity:0.6; }
+    50%     { opacity:1; transform:translateX(-50%) scale(1.05); }
+  }
+  .envelope.aberto .dica-toque { display:none; }
+
+  .carta {
+    position:absolute; left:50%; top:50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    width: calc(100vw - 24px);
+    max-width: 420px;
+    max-height: 92vh;
+    background: linear-gradient(180deg, #fffdf7, #faf0ff);
+    border-radius: 18px;
+    padding: 22px 18px 26px;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+    border: 3px solid #ffd54f;
+    overflow-y: auto;
+    opacity:0; pointer-events:none;
+    transition: all 1s cubic-bezier(.68,-0.55,.27,1.55);
+    z-index: 10;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+  .envelope.aberto .carta {
+    opacity:1; pointer-events:auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .carta::-webkit-scrollbar { width:6px; }
+  .carta::-webkit-scrollbar-thumb { background:#c2185b; border-radius:3px; }
+
+  .carta-coroa {
+    text-align:center; font-size:2.2em; margin-bottom:3px;
+    filter: drop-shadow(0 3px 6px rgba(230,81,0,0.4));
+  }
+  .carta h1 {
+    text-align:center; color:#7b1fa2; font-size:1.55em;
+    margin:0 0 4px; text-shadow: 1px 1px 0 #ffd54f;
+    font-family:'Comic Sans MS', cursive;
+  }
+  .carta h2 {
+    text-align:center; color:#c2185b; font-weight:normal;
+    font-size:0.95em; margin-bottom:12px;
+  }
+  .carta .estrelas {
+    text-align:center; color:#f9a825;
+    font-size:1em; letter-spacing:6px; margin:6px 0;
+  }
+  .carta p {
+    color:#4a148c; line-height:1.5; font-size:0.9em;
+    text-align:center; margin: 8px 0;
+  }
+  .carta .divisor {
+    text-align:center; margin:10px 0; color:#c2185b;
+    font-size:0.95em; letter-spacing:3px;
+  }
+
+  .regra-carta {
+    background: rgba(255,255,255,0.9);
     border-left: 5px solid #f8bbd0;
-    border-radius: 12px; padding: 12px 15px; margin-bottom: 10px;
-    font-size: 0.95em; line-height: 1.4;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin: 8px 0;
+    text-align: left;
+    font-size: 0.82em;
+    line-height: 1.4;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-  .regra .icone { font-size: 1.6em; flex-shrink: 0; }
-  .regra strong { color: #c2185b; display: block; margin-bottom: 3px; }
-  .regra em { color: #555; font-style: italic; font-size: 0.92em; }
-  .regra.destaque { background: rgba(255, 243, 224, 0.85); border-left-color: #ef6c00; }
-  .regra.destaque strong { color: #e65100; }
-  .regra.alerta { background: rgba(255, 235, 238, 0.85); border-left-color: #e53935; }
-  .regra.alerta strong { color: #c62828; }
+  .regra-carta strong {
+    color: #c2185b;
+    display: block;
+    margin-bottom: 3px;
+    font-size: 1em;
+  }
+  .regra-carta span { color: #4a148c; display: block; }
+  .regra-carta em {
+    color: #777;
+    font-style: italic;
+    font-size: 0.9em;
+    display: block;
+    margin-top: 3px;
+  }
+  .regra-carta.destaque {
+    background: rgba(255,243,224,0.95);
+    border-left-color: #ef6c00;
+  }
+  .regra-carta.destaque strong { color: #e65100; }
+  .regra-carta.alerta {
+    background: rgba(255,235,238,0.95);
+    border-left-color: #e53935;
+  }
+  .regra-carta.alerta strong { color: #c62828; }
 
-  .mapa { margin-top: 15px; border-radius: 12px; overflow: hidden; border: 3px solid rgba(248, 187, 208, 0.8); }
-  .mapa iframe { display: block; width: 100%; height: 220px; border: 0; }
-  .endereco { font-size: 0.95em; color: #444; margin-top: 10px; line-height: 1.5; }
+  .botoes-carta {
+    display:grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-top: 16px;
+  }
+  .btn-carta {
+    padding: 12px 8px; border-radius: 14px;
+    border: none; cursor: pointer;
+    font-family: inherit; font-weight: bold;
+    font-size: 0.85em; color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+    transition: transform 0.2s;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    text-decoration:none;
+    min-height: 56px;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+  .btn-carta:active { transform: scale(0.96); }
+  .btn-carta .icone { font-size:1.35em; }
 
-  .form {
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border-radius: 20px;
-    padding: 25px; margin-top: 30px; text-align: left;
-    border: 2px solid rgba(248, 187, 208, 0.8);
-  }
-  .form h3 { text-align: center; color: #6a1b9a; margin-top: 0; text-shadow: 1px 1px 0 #fff; }
-  .form label { font-size: 0.9em; color: #6a1b9a; font-weight: bold; display: block; margin-top: 12px; margin-bottom: 4px; }
-  .form input, .form select {
-    width: 100%; box-sizing: border-box;
-    padding: 12px; border-radius: 12px;
-    border: 2px solid #f8bbd0; font-size: 16px;
-    font-family: inherit; background: white;
-  }
-  .form input:focus, .form select:focus { outline: none; border-color: #f06292; }
+  .btn-confirmar  { background: linear-gradient(135deg,#66bb6a,#2e7d32); grid-column: span 2; font-size:1em; padding:15px; }
+  .btn-local      { background: linear-gradient(135deg,#42a5f5,#1565c0); }
+  .btn-presentes  { background: linear-gradient(135deg,#f9a825,#e65100); }
+  .btn-recusar    { background: linear-gradient(135deg,#ef5350,#b71c1c); grid-column: span 2; font-size:0.88em; padding:12px; }
 
-  .acompanhantes { margin-top: 20px; }
-  .acomp-item {
-    display: flex; gap: 8px; align-items: center;
-    background: white; padding: 10px; border-radius: 12px;
-    margin-bottom: 8px; border: 2px solid #fce4ec;
+  .tela-aux {
+    position:fixed; inset:0; z-index:100;
+    background: rgba(74,26,94,0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display:none; justify-content:center; align-items:center;
+    padding:15px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .acomp-item input { margin: 0; }
-  .acomp-item .btn-remover {
-    background: #ef5350; color: white; border: none;
-    border-radius: 8px; padding: 8px 12px; cursor: pointer;
-    font-weight: bold; flex-shrink: 0;
+  .tela-aux.ativa { display:flex; animation: fadeIn 0.4s; }
+  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+  .tela-aux-conteudo {
+    background: linear-gradient(180deg, #fffdf7, #faf0ff);
+    border-radius: 20px; padding: 24px 18px;
+    max-width: 420px; width:100%; max-height: 88vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
+    border: 3px solid #ffd54f;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+    text-align:center;
+  }
+  .tela-aux h3 { color:#c2185b; margin-bottom:12px; font-size:1.15em; }
+  .tela-aux p  { color:#4a148c; margin:8px 0; line-height:1.45; font-size:0.9em; }
+  .btn-fechar {
+    margin-top: 12px; padding:13px 25px;
+    background: linear-gradient(135deg,#ba68c8,#7b1fa2);
+    color:white; border:none; border-radius:14px;
+    font-weight:bold; cursor:pointer; font-family:inherit;
+    box-shadow: 0 5px 15px rgba(123,31,162,0.4);
+    min-height: 48px;
+    font-size: 0.95em;
+    touch-action: manipulation;
+  }
+  .btn-fechar:active { transform: scale(0.97); }
+
+  .item-presente {
+    display:flex; align-items:center; gap:10px;
+    background: white; padding:12px; border-radius:14px;
+    margin: 8px 0; text-align:left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-left: 5px solid #f9a825;
+  }
+  .item-presente .em { font-size:1.6em; flex-shrink:0; }
+  .item-presente strong { color:#c2185b; display:block; font-size:0.88em; }
+  .item-presente small { color:#666; font-size:0.78em; line-height:1.35; }
+
+  .flash {
+    position:fixed; inset:0; background:white;
+    opacity:0; pointer-events:none; z-index:200;
+    transition: opacity 0.5s;
+  }
+  .flash.ativo { opacity:1; }
+
+  @media (max-width: 420px) {
+    .titulo-fixo { top: 15px; }
+    .titulo-fixo h1 { font-size: 1.4em; }
+    .titulo-fixo .estrelinhas { letter-spacing: 6px; font-size: 0.75em; }
+    .palco { padding: 85px 12px 12px; }
+    .carta { padding: 18px 14px 22px; }
+    .carta h1 { font-size: 1.35em; }
+    .carta h2 { font-size: 0.85em; }
+    .carta p { font-size: 0.85em; }
+    .regra-carta { font-size: 0.78em; padding: 9px 11px; }
+    .btn-carta { font-size: 0.8em; padding: 10px 6px; min-height: 52px; }
+    .btn-confirmar { font-size: 0.92em; }
+    .btn-musica { width: 44px; height: 44px; font-size: 1.1em; }
+    .tela-aux-conteudo { padding: 20px 15px; }
   }
 
-  .btn-add {
-    background: #fff; color: #c2185b;
-    border: 2px dashed #f06292; border-radius: 12px;
-    padding: 10px 15px; cursor: pointer;
-    font-weight: bold; width: 100%; margin-top: 5px;
-    font-family: inherit; font-size: 14px;
+  @media (max-height: 620px) {
+    .carta { max-height: 95vh; padding: 16px 14px; }
+    .carta-coroa { font-size: 1.7em; }
+    .titulo-fixo { top: 8px; }
+    .titulo-fixo h1 { font-size: 1.3em; }
   }
-  .btn-add:hover { background: #fce4ec; }
-
-  .btn-enviar {
-    width: 100%; margin-top: 25px;
-    padding: 16px; font-size: 18px; border-radius: 30px;
-    border: none; background: linear-gradient(135deg, #f06292, #c2185b);
-    color: white; font-weight: bold; cursor: pointer;
-    box-shadow: 0 4px 12px rgba(194,24,91,0.4);
-  }
-  .btn-enviar:hover { transform: translateY(-2px); }
-  .btn-enviar:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-  .sucesso {
-    background: rgba(232, 245, 233, 0.9);
-    border: 2px solid #66bb6a;
-    border-radius: 15px; padding: 25px; margin-top: 20px;
-    color: #2e7d32;
-  }
-  .sucesso h3 { color: #2e7d32; margin-top: 0; }
-  .erro-msg { color: #c62828; font-weight: bold; margin-top: 10px; text-shadow: 1px 1px 0 #fff; }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="estrelas">✦ ✧ ✦ ✧ ✦</div>
-  <h1>Aurora 🌟</h1>
-  <h2>Chá de Bebê</h2>
-  <p><strong>Moises & Beatriz</strong> convidam você para celebrar<br>a chegada da nossa pequena Aurora.</p>
 
-  <div class="info">
-    <p>📅 <strong>29 de Novembro de 2026</strong></p>
-    <p>🕐 Horário: (a confirmar)</p>
-    <div class="endereco">
-      📍 <strong>Estrada do Pium, 4145</strong><br>
-      Mogi das Cruzes — SP<br>
-      CEP 08774-320
-    </div>
-    <div class="mapa">
-      <iframe src="https://www.google.com/maps?q=Estrada+do+Pium+4145+Mogi+das+Cruzes+SP+08774-320&output=embed" loading="lazy"></iframe>
-    </div>
-  </div>
+<div id="particulas"></div>
 
-  <div class="regras">
-    <h3>📋 Regras do Chá</h3>
+<button class="btn-musica" id="btnMusica" title="Ligar/desligar música">🔇</button>
 
-    <div class="regra">
-      <span class="icone">👗</span>
-      <div>
-        <strong>Vestimenta adequada</strong>
-        Pedimos a gentileza de virem com trajes apropriados para uma celebração em família.
-        <em>Não será permitido shorts curtos, saias curtas, roupas muito decotadas ou peças de praia.</em>
+<audio id="musica" loop preload="auto">
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<div class="titulo-fixo">
+  <div class="estrelinhas">✦ ✧ ✦</div>
+  <h1>Convite Especial</h1>
+  <div class="estrelinhas">✦ ✧ ✦</div>
+</div>
+
+<div class="palco">
+  <div class="envelope" id="envelope">
+    <div class="env-corpo"></div>
+    <div class="env-aba"></div>
+    <div class="selo">🌸</div>
+    <div class="dica-toque">👆 Toque no envelope</div>
+
+    <div class="carta" id="carta">
+      <div class="carta-coroa">👑</div>
+      <div class="estrelas">✦ ✧ ✦ ✧ ✦</div>
+      <h1>Convite Especial</h1>
+      <h2>Chá de Bebê da Aurora 🌟</h2>
+      <div class="divisor">❦ ❦ ❦</div>
+
+      <p>Com imensa alegria,</p>
+      <p><strong>Moises &amp; Beatriz</strong> convidam você para celebrar a chegada da nossa pequena princesa <strong>Aurora</strong>.</p>
+
+      <p>📅 <strong>29 de Novembro de 2026</strong><br>
+         🕐 Horário: (a confirmar)<br>
+         📍 Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
+
+      <div class="divisor">📋 Regras do Chá 📋</div>
+
+      <div class="regra-carta">
+        <strong>👗 Vestimenta adequada</strong>
+        <span>Trajes apropriados para celebração em família.</span>
+        <em>Não será permitido shorts curtos, saias curtas, roupas decotadas ou peças de praia.</em>
       </div>
-    </div>
 
-    <div class="regra">
-      <span class="icone">👶</span>
-      <div>
-        <strong>Fraldas — somente tamanhos M ou G</strong>
-        Para evitar desperdício, aceitaremos <strong>apenas fraldas tamanho M ou G</strong>.
+      <div class="regra-carta">
+        <strong>👶 Fraldas — somente M ou G</strong>
+        <span>Aceitaremos <u>apenas fraldas tamanho M ou G</u>.</span>
       </div>
-    </div>
 
-    <div class="regra destaque">
-      <span class="icone">💬</span>
-      <div>
-        <strong>Recado do papai Moises:</strong>
+      <div class="regra-carta destaque">
+        <strong>💬 Recado do papai Moises:</strong>
         <em>"Só entra se trazer fraldas destes tamanhos solicitados!"</em>
       </div>
-    </div>
 
-    <div class="regra">
-      <span class="icone">🥤</span>
-      <div>
-        <strong>Bebidas</strong>
-        Cada convidado deve <strong>trazer sua própria bebida para consumo</strong>.
-        <em>Não vamos admitir discussões ou brigas por causa de bebida.</em>
+      <div class="regra-carta">
+        <strong>🥤 Bebidas</strong>
+        <span>Cada convidado deve <u>trazer sua própria bebida</u>.</span>
+        <em>Não admitiremos discussões ou brigas por causa de bebida.</em>
       </div>
-    </div>
 
-    <div class="regra">
-      <span class="icone">🎁</span>
-      <div>
-        <strong>Mimo obrigatório</strong>
-        Cada convidado deve trazer <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.
+      <div class="regra-carta">
+        <strong>🎁 Mimo obrigatório</strong>
+        <span><u>Um mimo</u> para a Aurora <em>ou</em> para a mamãe.</span>
       </div>
-    </div>
 
-    <div class="regra alerta">
-      <span class="icone">🚫</span>
-      <div>
-        <strong>Proibido</strong>
-        Cigarros eletrônicos (vape), narguilé e quaisquer outros cigarros ilícitos.
-        <em>Ambiente 100% livre desses itens — é uma festa para a Aurora.</em>
+      <div class="regra-carta alerta">
+        <strong>🚫 Proibido</strong>
+        <span>Cigarros eletrônicos (vape), narguilé e outros cigarros ilícitos.</span>
       </div>
-    </div>
 
-    <div class="regra alerta">
-      <span class="icone">🔊</span>
-      <div>
-        <strong>Proibido caixa de som</strong>
-        Não será permitido trazer caixas de som ou equipamentos para música no local.
+      <div class="regra-carta alerta">
+        <strong>🔊 Proibido caixa de som</strong>
+        <span>Não traga caixas de som nem equipamentos de música.</span>
         <em>A música do chá será organizada pelos anfitriões.</em>
+      </div>
+
+      <div class="divisor">✨</div>
+      <p style="font-size:0.82em;font-style:italic;color:#7b1fa2;">
+        "Uma princesa está chegando, e você é nosso convidado de honra!" 💕
+      </p>
+
+      <div class="botoes-carta">
+        <button class="btn-carta btn-confirmar" onclick="irConfirmar()">
+          <span class="icone">✅</span>
+          Confirmar Presença
+        </button>
+
+        <button class="btn-carta btn-local" onclick="abrirLocal()">
+          <span class="icone">📍</span>
+          Ver Local
+        </button>
+
+        <button class="btn-carta btn-presentes" onclick="abrirPresentes()">
+          <span class="icone">🎁</span>
+          Presentes
+        </button>
+
+        <button class="btn-carta btn-recusar" onclick="abrirRecusa()">
+          <span class="icone">💔</span>
+          Não vou poder ir
+        </button>
       </div>
     </div>
   </div>
-
-  <div id="area-formulario"></div>
-
-  <div class="estrelas" style="margin-top:25px;">✦ ✧ ✦ ✧ ✦</div>
 </div>
+
+<div class="tela-aux" id="telaPresentes">
+  <div class="tela-aux-conteudo">
+    <div style="font-size:2.2em;">🎁</div>
+    <h3>Lista de Presentes</h3>
+    <p style="font-size:0.85em;color:#666;">Escolha um mimo para a Aurora ou para a mamãe 💕</p>
+
+    <div class="item-presente">
+      <span class="em">👶</span>
+      <div>
+        <strong>Fralda Tamanho M</strong>
+        <small>Somente M ou G — conforme solicitado</small>
+      </div>
+    </div>
+
+    <div class="item-presente">
+      <span class="em">👶</span>
+      <div>
+        <strong>Fralda Tamanho G</strong>
+        <small>Somente M ou G — conforme solicitado</small>
+      </div>
+    </div>
+
+    <div class="item-presente" style="border-left-color:#c2185b;">
+      <span class="em">🎀</span>
+      <div>
+        <strong>Mimo (obrigatório)</strong>
+        <small>Um mimo para a Aurora <em>ou</em> para a mamãe — você escolhe!</small>
+      </div>
+    </div>
+
+    <button class="btn-fechar" onclick="fecharAux('telaPresentes')">Fechar</button>
+  </div>
+</div>
+
+<div class="tela-aux" id="telaRecusa">
+  <div class="tela-aux-conteudo">
+    <div style="font-size:2.2em;">💔</div>
+    <h3>Que pena que não vai poder vir...</h3>
+    <p>A Aurora vai sentir sua falta! 🥺</p>
+    <p style="font-size:0.85em;color:#666;">Mas se mudar de ideia, é só voltar aqui e confirmar. 💕</p>
+
+    <button class="btn-fechar" style="background:linear-gradient(135deg,#ef5350,#b71c1c);" onclick="confirmarRecusa()">Confirmar que não vou</button>
+    <br><br>
+    <button class="btn-fechar" onclick="fecharAux('telaRecusa')">← Voltar</button>
+  </div>
+</div>
+
+<div class="flash" id="flash"></div>
 
 <script type="module">
 import { db } from './firebase.js';
-import { collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const area = document.getElementById('area-formulario');
-
-area.innerHTML = `
-  <div class="form" id="formBox">
-    <h3>✨ Confirme sua presença ✨</h3>
-
-    <label>Seu nome completo *</label>
-    <input id="fNome" placeholder="Digite seu nome">
-
-    <label>Fralda que vai trazer *</label>
-    <select id="fFralda">
-      <option value="M" selected>Fralda M</option>
-      <option value="G">Fralda G</option>
-    </select>
-
-    <div style="background:rgba(255,243,224,0.9);border-left:5px solid #ef6c00;border-radius:12px;padding:12px 15px;margin-top:15px;font-size:0.92em;">
-      🎁 <strong style="color:#e65100;">Mimo obrigatório!</strong><br>
-      <span style="color:#666;">Traga <strong>um mimo</strong> para a Aurora ou para a mamãe — fica a seu critério.</span>
-    </div>
-
-    <div class="acompanhantes">
-      <label>👥 Família / Acompanhantes</label>
-      <p style="font-size:0.85em;color:#666;margin:5px 0;">Adicione o nome de cada pessoa da sua família que virá com você. Se vier sozinho(a), deixe em branco.</p>
-      <div id="listaAcomp"></div>
-      <button type="button" class="btn-add" id="btnAddAcomp">➕ Adicionar familiar</button>
-    </div>
-
-    <button class="btn-enviar" id="btnEnviar">✅ Confirmar presença</button>
-    <p class="erro-msg" id="erro"></p>
-  </div>
-`;
-
-const listaAcomp = document.getElementById('listaAcomp');
-let contAcomp = 0;
-
-function adicionarAcompanhante() {
-  contAcomp++;
-  const id = contAcomp;
-  const div = document.createElement('div');
-  div.className = 'acomp-item';
-  div.id = 'acomp-' + id;
-  div.innerHTML = `
-    <input placeholder="Nome do familiar" class="acomp-nome" style="flex:1;">
-    <button type="button" class="btn-remover" onclick="document.getElementById('acomp-${id}').remove()">✕</button>
-  `;
-  listaAcomp.appendChild(div);
+/* PARTÍCULAS */
+const particulas = document.getElementById('particulas');
+const simbolos = ['✦','✧','🌸','💜','✨','👑','💕','⭐'];
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('div');
+  p.className = 'particula';
+  p.textContent = simbolos[Math.floor(Math.random()*simbolos.length)];
+  p.style.left = Math.random()*100 + 'vw';
+  p.style.animationDuration = (8 + Math.random()*8) + 's';
+  p.style.animationDelay = (Math.random()*8) + 's';
+  p.style.fontSize = (0.9 + Math.random()*1.2) + 'em';
+  particulas.appendChild(p);
 }
 
-document.getElementById('btnAddAcomp').addEventListener('click', adicionarAcompanhante);
+/* MÚSICA */
+const musica = document.getElementById('musica');
+const btnMusica = document.getElementById('btnMusica');
+let musicaLigada = false;
 
-document.getElementById('btnEnviar').addEventListener('click', async () => {
-  const btn = document.getElementById('btnEnviar');
-  const erro = document.getElementById('erro');
-  erro.textContent = '';
+function tentarTocar() {
+  musica.volume = 0.4;
+  musica.play().then(() => {
+    musicaLigada = true;
+    btnMusica.textContent = '🔊';
+    btnMusica.classList.add('tocando');
+  }).catch(() => {
+    musicaLigada = false;
+    btnMusica.textContent = '🔇';
+  });
+}
 
-  const nome = document.getElementById('fNome').value.trim();
-  const fralda = document.getElementById('fFralda').value;
-  const mimo = 'sim';
-
-  if (!nome) { erro.textContent = '⚠️ Preencha seu nome'; return; }
-
-  const acompanhantes = [];
-  const itens = document.querySelectorAll('.acomp-item');
-  for (const item of itens) {
-    const an = item.querySelector('.acomp-nome').value.trim();
-    if (an) acompanhantes.push({ nome: an });
-  }
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Enviando...';
-
-  try {
-    const idDoc = Date.now().toString() + '-' + nome.toLowerCase().replace(/\s+/g,'-').slice(0,20);
-
-    await setDoc(doc(db, 'convidados', idDoc), {
-      nome,
-      fralda, mimo,
-      acompanhantes,
-      totalPessoas: 1 + acompanhantes.length,
-      confirmado: true,
-      criadoEm: new Date().toISOString()
-    });
-
-    area.innerHTML = `
-      <div class="sucesso">
-        <h3>🌸 Presença confirmada!</h3>
-        <p>Obrigado, <strong>${nome}</strong>!</p>
-        <p>Você confirmou <strong>${1 + acompanhantes.length}</strong> pessoa(s) e vai trazer <strong>fralda ${fralda}</strong>.</p>
-        <p>🎁 E um mimo especial — a Aurora agradece! 💕</p>
-        <p style="margin-top:20px;">Nos vemos em <strong>29 de Novembro de 2026</strong>!</p>
-        <p style="font-size:0.9em;color:#666;">📍 Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
-      </div>
-    `;
-  } catch (e) {
-    console.error(e);
-    erro.textContent = '❌ Erro ao enviar: ' + e.message;
-    btn.disabled = false;
-    btn.textContent = '✅ Confirmar presença';
+btnMusica.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (musicaLigada) {
+    musica.pause();
+    musicaLigada = false;
+    btnMusica.textContent = '🔇';
+    btnMusica.classList.remove('tocando');
+  } else {
+    tentarTocar();
   }
 });
+
+/* ENVELOPE */
+const envelope = document.getElementById('envelope');
+envelope.addEventListener('click', () => {
+  if (envelope.classList.contains('aberto')) return;
+  if (!musicaLigada) tentarTocar();
+  envelope.classList.add('aberto');
+  envelope.style.animation = 'none';
+});
+
+/* AÇÕES */
+window.irConfirmar = function() {
+  const flash = document.getElementById('flash');
+  flash.classList.add('ativo');
+  setTimeout(() => { window.location.href = 'confirmar.html'; }, 500);
+};
+
+window.abrirLocal = function() {
+  const url = 'https://www.google.com/maps/search/?api=1&query=' +
+    encodeURIComponent('Estrada do Pium, 4145, Mogi das Cruzes, SP, 08774-320');
+  window.open(url, '_blank');
+};
+
+window.abrirPresentes = function() {
+  document.getElementById('telaPresentes').classList.add('ativa');
+};
+
+window.fecharAux = function(id) {
+  document.getElementById(id).classList.remove('ativa');
+};
+
+window.abrirRecusa = function() {
+  document.getElementById('telaRecusa').classList.add('ativa');
+};
+
+window.confirmarRecusa = async function() {
+  const nome = prompt('Para registrarmos, digite seu nome completo:');
+  if (!nome || !nome.trim()) return;
+
+  try {
+    const idDoc = 'recusou-' + Date.now() + '-' + nome.toLowerCase().replace(/\s+/g,'-').slice(0,20);
+    await setDoc(doc(db, 'convidados', idDoc), {
+      nome: nome.trim(),
+      fralda: '-',
+      acompanhantes: [],
+      totalPessoas: 0,
+      confirmado: false,
+      criadoEm: new Date().toISOString()
+    });
+    alert('Registramos sua resposta. Sentiremos sua falta! 💕');
+    fecharAux('telaRecusa');
+  } catch (e) {
+    alert('Erro ao registrar: ' + e.message);
+  }
+};
 </script>
 </body>
 </html>
