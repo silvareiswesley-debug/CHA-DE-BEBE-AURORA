@@ -55,10 +55,7 @@
     margin: 0;
     font-size: 1.7em;
     color: #fff;
-    text-shadow:
-      0 0 10px #c2185b,
-      0 0 20px #7b1fa2,
-      2px 2px 0 #4a1a5e;
+    text-shadow: 0 0 10px #c2185b, 0 0 20px #7b1fa2, 2px 2px 0 #4a1a5e;
     letter-spacing: 1px;
     font-weight: bold;
     font-family: 'Comic Sans MS', cursive;
@@ -186,11 +183,11 @@
     position:absolute; left:50%; top:50%;
     transform: translate(-50%, -50%) scale(0.6) rotate(-5deg);
     width: calc(100vw - 24px);
-    max-width: 420px;
+    max-width: 440px;
     max-height: 92vh;
     background: linear-gradient(180deg, #fffdf7, #faf0ff);
     border-radius: 18px;
-    padding: 22px 18px 26px;
+    padding: 22px 16px 26px;
     box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 60px rgba(255,213,79,0.4);
     border: 3px solid #ffd54f;
     overflow-y: auto;
@@ -223,18 +220,13 @@
     50%     { transform: rotate(5deg) scale(1.05); }
   }
   .carta h1 {
-    text-align:center; color:#7b1fa2; font-size:1.55em;
+    text-align:center; color:#7b1fa2; font-size:1.5em;
     margin:0 0 4px; text-shadow: 1px 1px 0 #ffd54f;
     font-family:'Comic Sans MS', cursive;
-    animation: fadeUp 0.8s ease;
-  }
-  @keyframes fadeUp {
-    from { opacity:0; transform: translateY(10px); }
-    to   { opacity:1; transform: translateY(0); }
   }
   .carta h2 {
     text-align:center; color:#c2185b; font-weight:normal;
-    font-size:0.95em; margin-bottom:12px;
+    font-size:0.92em; margin-bottom:10px;
   }
   .carta .estrelas {
     text-align:center; color:#f9a825;
@@ -246,63 +238,135 @@
     50%     { opacity:1; letter-spacing:8px; }
   }
   .carta p {
-    color:#4a148c; line-height:1.5; font-size:0.9em;
+    color:#4a148c; line-height:1.5; font-size:0.88em;
     text-align:center; margin: 8px 0;
   }
   .carta .divisor {
-    text-align:center; margin:10px 0; color:#c2185b;
-    font-size:0.95em; letter-spacing:3px;
-    animation: brilhar-estrelas 2s ease-in-out infinite;
+    text-align:center; margin:12px 0 6px; color:#c2185b;
+    font-size:1.05em; letter-spacing:3px;
+    font-weight:bold;
+    text-shadow: 1px 1px 0 #ffd54f;
   }
 
   .regra-carta {
-    background: rgba(255,255,255,0.9);
-    border-left: 5px solid #f8bbd0;
-    border-radius: 12px;
-    padding: 10px 12px;
-    margin: 8px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 14px;
+    margin: 12px 0;
     text-align: left;
-    font-size: 0.82em;
-    line-height: 1.4;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    font-size: 0.88em;
+    line-height: 1.45;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    border-left: 6px solid #c2185b;
     animation: slideIn 0.6s ease backwards;
+    position: relative;
+    overflow: hidden;
+  }
+  .regra-carta::before {
+    content:'';
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:4px;
+    background: linear-gradient(90deg, #c2185b, #ffd54f, #c2185b);
+    background-size: 200% 100%;
+    animation: brilho-barra 3s linear infinite;
+  }
+  @keyframes brilho-barra {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
   }
   .regra-carta:nth-child(1) { animation-delay: 0.1s; }
-  .regra-carta:nth-child(2) { animation-delay: 0.2s; }
-  .regra-carta:nth-child(3) { animation-delay: 0.3s; }
+  .regra-carta:nth-child(2) { animation-delay: 0.15s; }
+  .regra-carta:nth-child(3) { animation-delay: 0.2s; }
+  .regra-carta:nth-child(4) { animation-delay: 0.25s; }
+  .regra-carta:nth-child(5) { animation-delay: 0.3s; }
+  .regra-carta:nth-child(6) { animation-delay: 0.35s; }
+  .regra-carta:nth-child(7) { animation-delay: 0.4s; }
   @keyframes slideIn {
-    from { opacity:0; transform: translateX(-20px); }
-    to   { opacity:1; transform: translateX(0); }
+    from { opacity:0; transform: translateX(-25px) scale(0.95); }
+    to   { opacity:1; transform: translateX(0) scale(1); }
   }
-  .regra-carta strong {
+
+  .regra-icone {
+    font-size: 2em;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    animation: pulsar-icone 2.5s ease-in-out infinite;
+  }
+  @keyframes pulsar-icone {
+    0%,100% { transform: scale(1); }
+    50%     { transform: scale(1.12); }
+  }
+
+  .regra-conteudo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .regra-titulo {
     color: #c2185b;
-    display: block;
-    margin-bottom: 3px;
-    font-size: 1em;
+    font-weight: bold;
+    font-size: 1.05em;
+    line-height: 1.2;
   }
-  .regra-carta span { color: #4a148c; display: block; }
-  .regra-carta em {
+
+  .regra-descricao {
+    color: #4a148c;
+    font-size: 0.95em;
+    line-height: 1.4;
+  }
+
+  .regra-obs {
     color: #777;
     font-style: italic;
-    font-size: 0.9em;
-    display: block;
+    font-size: 0.85em;
     margin-top: 3px;
+    padding-top: 4px;
+    border-top: 1px dashed #ddd;
   }
+
   .regra-carta.destaque {
-    background: rgba(255,243,224,0.95);
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
     border-left-color: #ef6c00;
-    animation: pulsar-destaque 2.5s ease-in-out infinite;
+    animation: slideIn 0.6s ease backwards, pulsar-destaque 2.5s ease-in-out infinite;
   }
-  @keyframes pulsar-destaque {
-    0%,100% { box-shadow: 0 2px 8px rgba(239,108,0,0.2); }
-    50%     { box-shadow: 0 4px 20px rgba(239,108,0,0.5); }
+  .regra-carta.destaque::before {
+    background: linear-gradient(90deg, #ef6c00, #ffd54f, #ef6c00);
+    background-size: 200% 100%;
   }
-  .regra-carta.destaque strong { color: #e65100; }
+  .regra-carta.destaque .regra-titulo { color: #e65100; }
+
   .regra-carta.alerta {
-    background: rgba(255,235,238,0.95);
-    border-left-color: #e53935;
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    border-left-color: #c62828;
+    animation: slideIn 0.6s ease backwards, pulsar-alerta 2s ease-in-out infinite;
   }
-  .regra-carta.alerta strong { color: #c62828; }
+  @keyframes pulsar-alerta {
+    0%,100% { box-shadow: 0 4px 14px rgba(198,40,40,0.15); }
+    50%     { box-shadow: 0 4px 20px rgba(198,40,40,0.45); }
+  }
+  .regra-carta.alerta::before {
+    background: linear-gradient(90deg, #c62828, #ef5350, #c62828);
+    background-size: 200% 100%;
+  }
+  .regra-carta.alerta .regra-titulo { color: #c62828; }
+
+  .regra-carta.permitido {
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border-left-color: #2e7d32;
+  }
+  .regra-carta.permitido::before {
+    background: linear-gradient(90deg, #2e7d32, #66bb6a, #2e7d32);
+    background-size: 200% 100%;
+  }
+  .regra-carta.permitido .regra-titulo { color: #2e7d32; }
 
   .botoes-carta {
     display:grid; grid-template-columns: 1fr 1fr;
@@ -369,7 +433,6 @@
     border: 3px solid #ffd54f;
     box-shadow: 0 25px 70px rgba(0,0,0,0.5);
     text-align:center;
-    animation: aparecer-carta 0.6s ease;
   }
   .tela-aux h3 { color:#c2185b; margin-bottom:12px; font-size:1.15em; }
   .tela-aux p  { color:#4a148c; margin:8px 0; line-height:1.45; font-size:0.9em; }
@@ -391,11 +454,7 @@
     margin: 8px 0; text-align:left;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     border-left: 5px solid #f9a825;
-    animation: slideIn 0.5s ease backwards;
   }
-  .item-presente:nth-child(3) { animation-delay: 0.1s; }
-  .item-presente:nth-child(4) { animation-delay: 0.2s; }
-  .item-presente:nth-child(5) { animation-delay: 0.3s; }
   .item-presente .em { font-size:1.6em; flex-shrink:0; }
   .item-presente strong { color:#c2185b; display:block; font-size:0.88em; }
   .item-presente small { color:#666; font-size:0.78em; line-height:1.35; }
@@ -412,18 +471,22 @@
     .titulo-fixo h1 { font-size: 1.4em; }
     .titulo-fixo .estrelinhas { letter-spacing: 6px; font-size: 0.75em; }
     .palco { padding: 85px 12px 12px; }
-    .carta { padding: 18px 14px 22px; }
+    .carta { padding: 18px 12px 22px; }
     .carta h1 { font-size: 1.35em; }
     .carta h2 { font-size: 0.85em; }
     .carta p { font-size: 0.85em; }
-    .regra-carta { font-size: 0.78em; padding: 9px 11px; }
+    .regra-carta { font-size: 0.82em; padding: 12px 10px; gap: 10px; }
+    .regra-icone { font-size: 1.7em; }
+    .regra-titulo { font-size: 1em; }
+    .regra-descricao { font-size: 0.92em; }
+    .regra-obs { font-size: 0.8em; }
     .btn-carta { font-size: 0.8em; padding: 10px 6px; min-height: 52px; }
     .btn-confirmar { font-size: 0.92em; }
     .tela-aux-conteudo { padding: 20px 15px; }
   }
 
   @media (max-height: 620px) {
-    .carta { max-height: 95vh; padding: 16px 14px; }
+    .carta { max-height: 95vh; padding: 16px 12px; }
     .carta-coroa { font-size: 1.7em; }
     .titulo-fixo { top: 8px; }
     .titulo-fixo h1 { font-size: 1.3em; }
@@ -434,7 +497,7 @@
 
 <div id="particulas"></div>
 
-<audio id="musica" loop preload="auto" playsinline>
+<audio id="musica" loop preload="auto" playsinline muted="false">
   <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
@@ -465,44 +528,69 @@
          🕐 <strong>17:00 hrs</strong><br>
          📍 Estrada do Pium, 4145 — Mogi das Cruzes/SP</p>
 
-      <div class="divisor">📋 Regras do Chá 📋</div>
+      <div class="divisor">📋 REGRAS DO CHÁ 📋</div>
 
       <div class="regra-carta">
-        <strong>👗 Vestimenta adequada</strong>
-        <span>Trajes apropriados para celebração em família.</span>
-        <em>Não será permitido shorts curtos, saias curtas, roupas decotadas ou peças de praia.</em>
+        <div class="regra-icone">👗</div>
+        <div class="regra-conteudo">
+          <div class="regra-titulo">1. Vestimenta Adequada</div>
+          <div class="regra-descricao">Venha com trajes apropriados para uma celebração em família.</div>
+          <div class="regra-obs">❌ Não será permitido: shorts curtos, saias curtas, roupas muito decotadas ou peças de praia.</div>
+        </div>
       </div>
 
-      <div class="regra-carta">
-        <strong>👶 Fraldas — somente M ou G</strong>
-        <span>Aceitaremos <u>apenas fraldas tamanho M ou G</u>.</span>
+      <div class="regra-carta permitido">
+        <div class="regra-icone">👶</div>
+        <div class="regra-conteudo">
+          <div class="regra-titulo">2. Fraldas — Somente M ou G</div>
+          <div class="regra-descricao">Aceitaremos <strong>apenas fraldas tamanho M ou G</strong>.</div>
+          <div class="regra-obs">✅ Para evitar desperdício, só esses dois tamanhos.</div>
+        </div>
       </div>
 
       <div class="regra-carta destaque">
-        <strong>💬 Recado do papai Moises:</strong>
-        <em>"Só entra se trazer fraldas destes tamanhos solicitados!"</em>
+        <div class="regra-icone">💬</div>
+        <div class="regra-conteudo">
+          <div class="regra-titulo">3. Recado do Papai Moises</div>
+          <div class="regra-descricao"><em>"Só entra se trazer fraldas destes tamanhos solicitados!"</em></div>
+          <div class="regra-obs">⚠️ Regra obrigatória — sem exceção.</div>
+        </div>
       </div>
 
       <div class="regra-carta">
-        <strong>🥤 Bebidas</strong>
-        <span>Cada convidado deve <u>trazer sua própria bebida</u>.</span>
-        <em>Não admitiremos discussões ou brigas por causa de bebida.</em>
+        <div class="regra-icone">🥤</div>
+        <div class="regra-conteudo">
+          <div class="regra-titulo">4. Bebidas — Traga a Sua</div>
+          <div class="regra-descricao">Cada convidado deve <strong>trazer sua própria bebida</strong> para consumo.</div>
+          <div class="regra-obs">⚠️ Não vamos admitir discussões ou brigas por causa de bebida.</div>
+        </div>
       </div>
 
-      <div class="regra-carta">
-        <strong>🎁 Mimo obrigatório</strong>
-        <span><u>Um mimo</u> para a Aurora <em>ou</em> para a mamãe.</span>
+      <div class="regra-carta permitido">
+        <div class="regra-icone">🎁</div>
+        <div class="regra-conteudo">
+          <div class="regra-titulo">5. Mimo Obrigatório</div>
+          <div class="regra-descricao">Traga <strong>um mimo</strong> para a Aurora <em>ou</em> para a mamãe.</div>
+          <div class="regra-obs">✅ Você escolhe o mimo que quiser.</div>
+        </div>
       </div>
 
       <div class="regra-carta alerta">
-        <strong>🚫 Proibido</strong>
-        <span>Cigarros eletrônicos (vape), narguilé e outros cigarros ilícitos.</span>
+        <div class="regra-icone">🚫</div>
+        <div class="regra-conteudo">
+          <div class="regra-titulo">6. Proibido — Cigarros</div>
+          <div class="regra-descricao">Proibido cigarros eletrônicos (vape), narguilé e quaisquer outros cigarros ilícitos.</div>
+          <div class="regra-obs">🚫 Ambiente 100% livre — é uma festa para a Aurora.</div>
+        </div>
       </div>
 
       <div class="regra-carta alerta">
-        <strong>🔊 Proibido caixa de som</strong>
-        <span>Não traga caixas de som nem equipamentos de música.</span>
-        <em>A música do chá será organizada pelos anfitriões.</em>
+        <div class="regra-icone">🔊</div>
+        <div class="regra-conteudo">
+          <div class="regra-titulo">7. Proibido — Caixa de Som</div>
+          <div class="regra-descricao">Não será permitido trazer caixas de som nem equipamentos de música.</div>
+          <div class="regra-obs">🎵 A música do chá será organizada pelos anfitriões.</div>
+        </div>
       </div>
 
       <div class="divisor">✨</div>
@@ -588,7 +676,7 @@
 import { db } from './firebase.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* PARTÍCULAS */
+/* ===== PARTÍCULAS ===== */
 const particulas = document.getElementById('particulas');
 const simbolos = ['✦','✧','🌸','💜','✨','👑','💕','⭐'];
 for (let i = 0; i < 18; i++) {
@@ -602,12 +690,19 @@ for (let i = 0; i < 18; i++) {
   particulas.appendChild(p);
 }
 
-/* ===== MÚSICA - toca automaticamente ao carregar ===== */
+/* ===== MÚSICA - toca automaticamente ao abrir o link ===== */
 const musica = document.getElementById('musica');
 let musicaLigada = false;
 
 function tocarMusica() {
   if (musicaLigada) return;
+
+  /* Se veio de outra página com música tocando, retoma do tempo salvo */
+  const tempoSalvo = sessionStorage.getItem('musicaTempo');
+  if (tempoSalvo && !isNaN(parseFloat(tempoSalvo))) {
+    try { musica.currentTime = parseFloat(tempoSalvo); } catch(e) {}
+  }
+
   musica.volume = 0.4;
   const p = musica.play();
   if (p) {
@@ -615,7 +710,7 @@ function tocarMusica() {
       musicaLigada = true;
       sessionStorage.setItem('musicaTocando', 'sim');
     }).catch(() => {
-      /* Autoplay bloqueado — tenta no primeiro toque/clique */
+      /* Autoplay bloqueado — tenta no primeiro toque/clique em qualquer lugar */
       const iniciar = () => {
         musica.play().then(() => {
           musicaLigada = true;
@@ -632,18 +727,30 @@ function tocarMusica() {
   }
 }
 
-/* Tenta tocar assim que a página carrega */
+/* Tenta tocar IMEDIATAMENTE (várias chamadas para garantir) */
 tocarMusica();
-window.addEventListener('load', tocarMusica);
 document.addEventListener('DOMContentLoaded', tocarMusica);
+window.addEventListener('load', tocarMusica);
+setTimeout(tocarMusica, 100);
+setTimeout(tocarMusica, 500);
+setTimeout(tocarMusica, 1000);
 
-/* Se já estava tocando em outra página, continua */
-if (sessionStorage.getItem('musicaTocando') === 'sim') {
-  musicaLigada = false;
-  tocarMusica();
-}
+/* Salva tempo da música periodicamente para retomar na próxima página */
+setInterval(() => {
+  if (musicaLigada && musica.currentTime > 0) {
+    sessionStorage.setItem('musicaTempo', musica.currentTime.toString());
+  }
+}, 1000);
 
-/* ENVELOPE */
+/* Salva o tempo antes de sair da página */
+window.addEventListener('beforeunload', () => {
+  if (musicaLigada) {
+    sessionStorage.setItem('musicaTempo', musica.currentTime.toString());
+    sessionStorage.setItem('musicaTocando', 'sim');
+  }
+});
+
+/* ===== ENVELOPE ===== */
 const envelope = document.getElementById('envelope');
 envelope.addEventListener('click', () => {
   if (envelope.classList.contains('aberto')) return;
@@ -652,9 +759,12 @@ envelope.addEventListener('click', () => {
   envelope.style.animation = 'none';
 });
 
-/* AÇÕES - mantém música tocando ao mudar de página */
+/* ===== AÇÕES ===== */
 window.irConfirmar = function() {
-  sessionStorage.setItem('musicaTocando', 'sim');
+  if (musicaLigada) {
+    sessionStorage.setItem('musicaTempo', musica.currentTime.toString());
+    sessionStorage.setItem('musicaTocando', 'sim');
+  }
   const flash = document.getElementById('flash');
   flash.classList.add('ativo');
   setTimeout(() => { window.location.href = 'confirmar.html'; }, 500);
